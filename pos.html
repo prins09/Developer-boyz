@@ -1,0 +1,1921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant POS Pro - Complete Edition</title>
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- Chart.js for analytics -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f0f2f5;
+  }
+
+  /* Login Screen */
+  .login-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .login-box {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    width: 350px;
+    text-align: center;
+    animation: slideUp 0.5s ease;
+  }
+
+  .login-box h2 {
+    color: #2d3748;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .login-box input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+  }
+
+  .login-box input:focus {
+    border-color: #667eea;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  .login-box button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+  }
+
+  .login-box button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+  }
+
+  /* Main App Layout */
+  .app-container {
+    display: none;
+    min-height: 100vh;
+  }
+
+  /* Top Navigation */
+  .top-nav {
+    background: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .staff-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f7fafc;
+    padding: 8px 15px;
+    border-radius: 25px;
+  }
+
+  .staff-info i {
+    color: #48bb78;
+  }
+
+  .logout-btn {
+    background: #f56565;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .logout-btn:hover {
+    background: #c53030;
+    transform: translateY(-2px);
+  }
+
+  /* Main Content */
+  .main-content {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  /* Left Panel - Menu & Tables */
+  .left-panel {
+    width: 60%;
+  }
+
+  /* Table Management */
+  .table-management {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .section-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #2d3748;
+  }
+
+  .table-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+  }
+
+  .table-btn {
+    padding: 15px 5px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .table-btn.available {
+    background: #c6f6d5;
+    color: #22543d;
+  }
+
+  .table-btn.occupied {
+    background: #fed7d7;
+    color: #742a2a;
+  }
+
+  .table-btn.selected {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 3px #667eea;
+  }
+
+  .table-btn i {
+    font-size: 1.2rem;
+  }
+
+  /* Menu Categories */
+  .menu-categories {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .category-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background: #edf2f7;
+    color: #4a5568;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .category-btn.active {
+    background: #667eea;
+    color: white;
+  }
+
+  .category-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+  }
+
+  /* Menu Items */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+  }
+
+  .menu-item {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .menu-item:hover {
+    transform: translateY(-5px);
+    border-color: #667eea;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+  }
+
+  .menu-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+
+  .menu-item h4 {
+    color: #2d3748;
+    margin-bottom: 5px;
+  }
+
+  .menu-item .price {
+    color: #48bb78;
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+
+  .menu-item .category-tag {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-top: 5px;
+  }
+
+  /* Right Panel - Cart */
+  .right-panel {
+    width: 40%;
+  }
+
+  .cart-panel {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    position: sticky;
+    top: 90px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+  }
+
+  .cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #edf2f7;
+  }
+
+  .table-info {
+    background: #667eea;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 25px;
+    font-size: 0.9rem;
+  }
+
+  .cart-items {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+  }
+
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #f7fafc;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    animation: slideIn 0.3s ease;
+  }
+
+  .cart-item-info {
+    flex: 2;
+  }
+
+  .cart-item-name {
+    font-weight: 600;
+    color: #2d3748;
+  }
+
+  .cart-item-price {
+    color: #718096;
+    font-size: 0.9rem;
+  }
+
+  .cart-item-actions {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .cart-item-actions button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .cart-item-actions .increase {
+    background: #48bb78;
+    color: white;
+  }
+
+  .cart-item-actions .decrease {
+    background: #f56565;
+    color: white;
+  }
+
+  .cart-item-actions .remove {
+    background: #cbd5e0;
+    color: #4a5568;
+  }
+
+  .cart-item-actions button:hover {
+    transform: scale(1.1);
+  }
+
+  .cart-item-note {
+    margin-top: 5px;
+  }
+
+  .cart-item-note input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+    font-size: 0.8rem;
+  }
+
+  /* Discount Section */
+  .discount-section {
+    background: #f7fafc;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 15px 0;
+  }
+
+  .discount-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .discount-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 5px;
+  }
+
+  .discount-input button {
+    padding: 8px 15px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .discount-badges {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .discount-badge {
+    background: #edf2f7;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .discount-badge:hover {
+    background: #667eea;
+    color: white;
+  }
+
+  /* Order Summary */
+  .order-summary {
+    border-top: 2px solid #edf2f7;
+    padding-top: 15px;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: #4a5568;
+  }
+
+  .summary-row.total {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2d3748;
+    border-top: 2px solid #edf2f7;
+    padding-top: 10px;
+    margin-top: 10px;
+  }
+
+  /* Payment Section */
+  .payment-section {
+    margin: 20px 0;
+  }
+
+  .payment-methods {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  .payment-method {
+    padding: 10px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .payment-method.active {
+    border-color: #48bb78;
+    background: #f0fff4;
+  }
+
+  .payment-method i {
+    font-size: 1.5rem;
+  }
+
+  .payment-method.cash i { color: #48bb78; }
+  .payment-method.card i { color: #667eea; }
+  .payment-method.online i { color: #9f7aea; }
+
+  .split-bill {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f7fafc;
+    border-radius: 10px;
+  }
+
+  .split-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .action-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .action-btn.hold {
+    background: #ed8936;
+    color: white;
+  }
+
+  .action-btn.print {
+    background: #4299e1;
+    color: white;
+  }
+
+  .action-btn.checkout {
+    background: #48bb78;
+    color: white;
+  }
+
+  .action-btn.cancel {
+    background: #f56565;
+    color: white;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  /* Orders Panel */
+  .orders-panel {
+    margin-top: 30px;
+  }
+
+  .orders-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .tab-btn {
+    padding: 10px 20px;
+    border: none;
+    background: #edf2f7;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .tab-btn.active {
+    background: #667eea;
+    color: white;
+  }
+
+  .orders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+  }
+
+  .order-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border-left: 4px solid #48bb78;
+  }
+
+  .order-card.pending {
+    border-left-color: #ed8936;
+  }
+
+  .order-card.completed {
+    border-left-color: #48bb78;
+  }
+
+  .order-card.cancelled {
+    border-left-color: #f56565;
+  }
+
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .order-id {
+    font-weight: 700;
+    color: #2d3748;
+  }
+
+  .order-status {
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    border-radius: 15px;
+    background: #f7fafc;
+  }
+
+  /* Analytics Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 800px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .close-modal {
+    float: right;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #718096;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+  }
+
+  .stat-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .stat-card i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .main-content {
+      flex-direction: column;
+    }
+    
+    .left-panel, .right-panel {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h2>
+      <i class="fas fa-utensils"></i>
+      POS System Login
+    </h2>
+    <input type="text" id="username" placeholder="Username" value="admin">
+    <input type="password" id="password" placeholder="Password" value="admin123">
+    <select id="role">
+      <option value="manager">Manager</option>
+      <option value="cashier">Cashier</option>
+      <option value="waiter">Waiter</option>
+    </select>
+    <button onclick="login()">
+      <i class="fas fa-sign-in-alt"></i>
+      Login
+    </button>
+  </div>
+</div>
+
+<!-- Main App Container -->
+<div class="app-container" id="appContainer">
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-left">
+      <div class="logo">
+        <i class="fas fa-utensils"></i>
+        Restaurant POS Pro
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="staff-info" id="staffInfo">
+        <i class="fas fa-user-circle"></i>
+        <span id="staffName">Admin</span>
+        <span id="staffRole" style="color:#718096;">(Manager)</span>
+      </div>
+      <button class="logout-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        Logout
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <!-- Table Management -->
+      <div class="table-management">
+        <div class="section-header">
+          <h3>
+            <i class="fas fa-chair"></i>
+            Table Management
+          </h3>
+          <button class="action-btn" style="padding: 5px 15px;" onclick="showAllTables()">
+            <i class="fas fa-eye"></i> All Tables
+          </button>
+        </div>
+        <div class="table-grid" id="tableGrid"></div>
+      </div>
+
+      <!-- Menu Categories -->
+      <div class="menu-categories" id="menuCategories"></div>
+
+      <!-- Menu Items -->
+      <div class="menu-grid" id="menuItems"></div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+      <div class="cart-panel">
+        <div class="cart-header">
+          <h3>
+            <i class="fas fa-shopping-cart"></i>
+            Current Order
+          </h3>
+          <span class="table-info" id="selectedTable">Table 1</span>
+        </div>
+
+        <!-- Cart Items -->
+        <div class="cart-items" id="cartItems"></div>
+
+        <!-- Customer Note -->
+        <div style="margin-bottom: 15px;">
+          <input type="text" id="customerNote" placeholder="Customer note / special requests..." style="width:100%; padding:8px; border:1px solid #e2e8f0; border-radius:5px;">
+        </div>
+
+        <!-- Discount Section -->
+        <div class="discount-section">
+          <label><i class="fas fa-tag"></i> Apply Discount</label>
+          <div class="discount-input">
+            <input type="number" id="discountValue" placeholder="Amount or %" min="0" step="0.01">
+            <select id="discountType">
+              <option value="amount">$ Amount</option>
+              <option value="percentage">% Percentage</option>
+            </select>
+            <button onclick="applyDiscount()">Apply</button>
+          </div>
+          <div class="discount-badges">
+            <span class="discount-badge" onclick="applyQuickDiscount(10, 'percentage')">10% OFF</span>
+            <span class="discount-badge" onclick="applyQuickDiscount(20, 'percentage')">20% OFF</span>
+            <span class="discount-badge" onclick="applyQuickDiscount(5, 'amount')">$5 OFF</span>
+            <span class="discount-badge" onclick="applyQuickDiscount(10, 'amount')">$10 OFF</span>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span>$<span id="subtotal">0.00</span></span>
+          </div>
+          <div class="summary-row">
+            <span>Tax (10%):</span>
+            <span>$<span id="tax">0.00</span></span>
+          </div>
+          <div class="summary-row">
+            <span>Discount:</span>
+            <span>-$<span id="discount">0.00</span></span>
+          </div>
+          <div class="summary-row total">
+            <span>Total:</span>
+            <span>$<span id="total">0.00</span></span>
+          </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div class="payment-section">
+          <label><i class="fas fa-credit-card"></i> Payment Method</label>
+          <div class="payment-methods">
+            <div class="payment-method cash active" onclick="selectPaymentMethod('cash')">
+              <i class="fas fa-money-bill"></i>
+              <span>Cash</span>
+            </div>
+            <div class="payment-method card" onclick="selectPaymentMethod('card')">
+              <i class="fas fa-credit-card"></i>
+              <span>Card</span>
+            </div>
+            <div class="payment-method online" onclick="selectPaymentMethod('online')">
+              <i class="fas fa-mobile-alt"></i>
+              <span>Online</span>
+            </div>
+          </div>
+
+          <!-- Split Bill -->
+          <div class="split-bill">
+            <label>
+              <i class="fas fa-users"></i>
+              Split Bill
+            </label>
+            <div class="split-input">
+              <input type="number" id="splitPeople" placeholder="Number of people" min="1" value="1">
+              <button onclick="splitBill()">Calculate</button>
+            </div>
+            <div id="splitResult" style="margin-top:10px; font-weight:600;"></div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="action-btn hold" onclick="holdOrder()">
+            <i class="fas fa-pause-circle"></i>
+            Hold Order
+          </button>
+          <button class="action-btn print" onclick="printReceipt()">
+            <i class="fas fa-print"></i>
+            Print
+          </button>
+          <button class="action-btn checkout" onclick="checkout()">
+            <i class="fas fa-check-circle"></i>
+            Checkout
+          </button>
+          <button class="action-btn cancel" onclick="cancelOrder()">
+            <i class="fas fa-times-circle"></i>
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- Orders Panel -->
+      <div class="orders-panel">
+        <div class="section-header">
+          <h3>
+            <i class="fas fa-clipboard-list"></i>
+            Recent Orders
+          </h3>
+          <button class="action-btn" style="padding: 5px 15px;" onclick="showAnalytics()">
+            <i class="fas fa-chart-bar"></i>
+            Analytics
+          </button>
+        </div>
+        
+        <div class="orders-tabs">
+          <button class="tab-btn active" onclick="filterOrders('all')">All</button>
+          <button class="tab-btn" onclick="filterOrders('pending')">Pending</button>
+          <button class="tab-btn" onclick="filterOrders('completed')">Completed</button>
+          <button class="tab-btn" onclick="filterOrders('cancelled')">Cancelled</button>
+        </div>
+
+        <div class="orders-grid" id="ordersGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Analytics Modal -->
+<div class="modal" id="analyticsModal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeAnalytics()">&times;</span>
+    <h2><i class="fas fa-chart-bar"></i> Sales Analytics</h2>
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <i class="fas fa-dollar-sign"></i>
+        <div class="stat-value" id="todaySales">$0</div>
+        <div>Today's Sales</div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-shopping-bag"></i>
+        <div class="stat-value" id="totalOrders">0</div>
+        <div>Total Orders</div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-users"></i>
+        <div class="stat-value" id="avgOrder">$0</div>
+        <div>Avg Order Value</div>
+      </div>
+    </div>
+
+    <canvas id="salesChart" style="margin-top: 20px;"></canvas>
+    
+    <h3 style="margin-top: 20px;">Top Selling Items</h3>
+    <div id="topItems" style="margin-top: 10px;"></div>
+  </div>
+</div>
+
+<script>
+// ==================== DATA STRUCTURES ====================
+const menu = [
+  {id:1, name:"Classic Burger", price:8, category:"Main", icon:"fa-burger", image:"🍔", popular:true, stock:50},
+  {id:2, name:"Margherita Pizza", price:12, category:"Main", icon:"fa-pizza-slice", image:"🍕", popular:true, stock:30},
+  {id:3, name:"Chicken Pasta", price:10, category:"Main", icon:"fa-utensils", image:"🍝", popular:true, stock:40},
+  {id:4, name:"Caesar Salad", price:6, category:"Salads", icon:"fa-leaf", image:"🥗", popular:false, stock:25},
+  {id:5, name:"French Fries", price:4, category:"Sides", icon:"fa-bowl-food", image:"🍟", popular:true, stock:100},
+  {id:6, name:"Soft Drink", price:2, category:"Drinks", icon:"fa-mug-saucer", image:"🥤", popular:false, stock:200},
+  {id:7, name:"Steak", price:18, category:"Main", icon:"fa-utensils", image:"🥩", popular:true, stock:20},
+  {id:8, name:"Wine", price:8, category:"Drinks", icon:"fa-wine-glass", image:"🍷", popular:false, stock:50},
+  {id:9, name:"Coffee", price:3, category:"Drinks", icon:"fa-mug-hot", image:"☕", popular:true, stock:100},
+  {id:10, name:"Ice Cream", price:4, category:"Desserts", icon:"fa-ice-cream", image:"🍦", popular:true, stock:40}
+];
+
+const staff = [
+  {username: "admin", password: "admin123", name: "Prins Sah", role: "manager"},
+  {username: "cashier", password: "cash123", name: "Sanjit Sah", role: "cashier"},
+  {username: "waiter", password: "waiter123", name: "Arun kumar", role: "waiter"}
+];
+
+// ==================== STATE MANAGEMENT ====================
+let currentUser = null;
+let cart = [];
+let selectedTable = 1;
+let activeCategory = "all";
+let discount = {type: null, value: 0};
+let heldOrders = [];
+let orders = [];
+let paymentMethod = 'cash';
+let tables = [];
+
+// ==================== SERVER STORAGE FUNCTIONS ====================
+
+// Save order to server
+async function saveOrderToServer(order) {
+    try {
+        const response = await fetch('api.php?action=saveOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(order)
+        });
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Error saving order:', error);
+        return { status: 'error' };
+    }
+}
+
+// Load orders from server
+async function loadOrdersFromServer(filter = 'all') {
+    try {
+        const response = await fetch(`api.php?action=getOrders&filter=${filter}`);
+        const result = await response.json();
+        if (result.status === 'success' && result.data) {
+            orders = result.data;
+        } else {
+            orders = JSON.parse(localStorage.getItem('orders')) || [];
+        }
+        renderOrders(filter);
+    } catch (error) {
+        console.error('Error loading orders:', error);
+        orders = JSON.parse(localStorage.getItem('orders')) || [];
+        renderOrders(filter);
+    }
+}
+
+// Save held order to server
+async function saveHeldOrderToServer(heldOrder) {
+    try {
+        const response = await fetch('api.php?action=saveHeldOrder', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(heldOrder)
+        });
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Error saving held order:', error);
+        return { status: 'error' };
+    }
+}
+
+// Load held orders from server
+async function loadHeldOrdersFromServer() {
+    try {
+        const response = await fetch('api.php?action=getHeldOrders');
+        const result = await response.json();
+        if (result.status === 'success' && result.data) {
+            heldOrders = result.data;
+        } else {
+            heldOrders = JSON.parse(localStorage.getItem('heldOrders')) || [];
+        }
+    } catch (error) {
+        console.error('Error loading held orders:', error);
+        heldOrders = JSON.parse(localStorage.getItem('heldOrders')) || [];
+    }
+}
+
+// Update table status on server
+async function updateTableOnServer(tableId, status, currentOrder = null) {
+    const formData = new FormData();
+    formData.append('action', 'updateTable');
+    formData.append('table_id', tableId);
+    formData.append('status', status);
+    if (currentOrder) {
+        formData.append('current_order', JSON.stringify(currentOrder));
+    }
+    
+    try {
+        await fetch('api.php', {
+            method: 'POST',
+            body: formData
+        });
+    } catch (error) {
+        console.error('Error updating table:', error);
+    }
+}
+
+// Load tables from server
+async function loadTablesFromServer() {
+    console.log('Loading tables from server...');
+    try {
+        const response = await fetch('api.php?action=getTables');
+        const result = await response.json();
+        
+        if (result.status === 'success' && result.data && result.data.length > 0) {
+            tables = result.data;
+            console.log('Tables loaded from server:', tables);
+        } else {
+            console.log('No tables from server, using defaults');
+            tables = Array.from({length: 12}, (_, i) => ({
+                id: i + 1,
+                table_number: i + 1,
+                status: 'available',
+                current_order: null
+            }));
+        }
+        renderTables();
+    } catch (error) {
+        console.error('Error loading tables:', error);
+        console.log('Using default tables due to error');
+        tables = Array.from({length: 12}, (_, i) => ({
+            id: i + 1,
+            table_number: i + 1,
+            status: 'available',
+            current_order: null
+        }));
+        renderTables();
+    }
+}
+
+// Load menu from server - FIXED VERSION
+async function loadMenuFromServer() {
+    console.log('Loading menu from server...');
+    try {
+        const response = await fetch('api.php?action=getMenu');
+        const result = await response.json();
+        
+        if (result.status === 'success' && result.data && result.data.length > 0) {
+            // Clear existing menu
+            menu.length = 0;
+            
+            // Format each item properly before adding
+            result.data.forEach(item => {
+                menu.push({
+                    id: parseInt(item.id) || 0,
+                    name: item.name || 'Unknown',
+                    price: parseFloat(item.price) || 0,
+                    category: item.category || 'Other',
+                    icon: item.icon || 'fa-utensils',
+                    image: item.image || '🍽️',
+                    popular: item.popular === true || item.popular === 1 || item.popular === '1',
+                    stock: parseInt(item.stock) || 0
+                });
+            });
+            console.log('Menu loaded from server:', menu);
+        } else {
+            console.log('No menu from server, using default menu');
+        }
+        renderMenu();
+    } catch (error) {
+        console.error('Error loading menu:', error);
+        console.log('Using default menu due to error');
+        renderMenu();
+    }
+}
+
+// Updated renderMenu function
+function renderMenu() {
+  console.log('Rendering menu:', menu);
+  const container = document.getElementById('menuItems');
+  if (!container) {
+    console.error('Menu items element not found!');
+    return;
+  }
+  
+  const filtered = activeCategory === 'all' 
+    ? menu 
+    : menu.filter(item => item.category === activeCategory);
+  
+  if (!filtered || filtered.length === 0) {
+    container.innerHTML = '<p style="grid-column:1/-1; text-align:center;">No menu items available</p>';
+    return;
+  }
+  
+  container.innerHTML = filtered.map(item => {
+    // Ensure price is a number
+    const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
+    
+    return `
+      <div class="menu-item" onclick="addToCart(${item.id})">
+        <div style="font-size:3rem; text-align:center;">${item.image || '🍽️'}</div>
+        <h4>${item.name || 'Unknown'}</h4>
+        <div class="price">$${price.toFixed(2)}</div>
+        <div class="category-tag">
+          <i class="fas ${item.icon || 'fa-utensils'}"></i> ${item.category || 'Other'}
+        </div>
+        ${item.popular ? '<span style="color:#ed8936;"><i class="fas fa-fire"></i> Popular</span>' : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+// Get analytics from server
+async function loadAnalyticsFromServer() {
+    try {
+        const response = await fetch('api.php?action=getAnalytics');
+        const result = await response.json();
+        if (result.status === 'success' && result.data) {
+            document.getElementById('todaySales').textContent = `$${parseFloat(result.data.today_sales).toFixed(2)}`;
+            document.getElementById('totalOrders').textContent = result.data.total_orders;
+            document.getElementById('avgOrder').textContent = `$${parseFloat(result.data.avg_order).toFixed(2)}`;
+        }
+    } catch (error) {
+        console.error('Error loading analytics:', error);
+    }
+}
+
+// Void order on server
+async function voidOrderOnServer(orderId) {
+    const formData = new FormData();
+    formData.append('action', 'voidOrder');
+    formData.append('order_id', orderId);
+    
+    try {
+        await fetch('api.php', {
+            method: 'POST',
+            body: formData
+        });
+    } catch (error) {
+        console.error('Error voiding order:', error);
+    }
+}
+
+// ==================== INITIALIZATION ====================
+async function init() {
+    console.log('Initializing POS system...');
+    await loadMenuFromServer();
+    await loadTablesFromServer();
+    await loadOrdersFromServer();
+    await loadHeldOrdersFromServer();
+    renderCategories();
+    updateCartDisplay();
+}
+
+// ==================== AUTHENTICATION ====================
+async function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const role = document.getElementById('role').value;
+    
+    // First try local login as fallback
+    const localUser = staff.find(s => s.username === username && s.password === password && s.role === role);
+    
+    const formData = new FormData();
+    formData.append('action', 'login');
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('role', role);
+    
+    try {
+        const response = await fetch('api.php', {
+            method: 'POST',
+            body: formData
+        });
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+            currentUser = {
+                name: result.data.name,
+                role: result.data.role
+            };
+            document.getElementById('staffName').textContent = result.data.name;
+            document.getElementById('staffRole').textContent = `(${result.data.role})`;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            await init();
+            showNotification(`Welcome ${result.data.name}!`, 'success');
+        } else if (localUser) {
+            // Fallback to local login if server fails
+            currentUser = localUser;
+            document.getElementById('staffName').textContent = localUser.name;
+            document.getElementById('staffRole').textContent = `(${localUser.role})`;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            await init();
+            showNotification(`Welcome ${localUser.name}! (Local mode)`, 'success');
+        } else {
+            showNotification('Invalid credentials!', 'error');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        if (localUser) {
+            // Fallback to local login if server fails
+            currentUser = localUser;
+            document.getElementById('staffName').textContent = localUser.name;
+            document.getElementById('staffRole').textContent = `(${localUser.role})`;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('appContainer').style.display = 'block';
+            await init();
+            showNotification(`Welcome ${localUser.name}! (Server offline)`, 'success');
+        } else {
+            showNotification('Login failed!', 'error');
+        }
+    }
+}
+
+function logout() {
+    currentUser = null;
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('appContainer').style.display = 'none';
+    showNotification('Logged out successfully', 'success');
+}
+
+// ==================== TABLE MANAGEMENT ====================
+function renderTables() {
+  console.log('Rendering tables:', tables);
+  const grid = document.getElementById('tableGrid');
+  if (!grid) {
+    console.error('Table grid element not found!');
+    return;
+  }
+  
+  grid.innerHTML = '';
+  
+  if (!tables || tables.length === 0) {
+    grid.innerHTML = '<p style="grid-column:1/-1; text-align:center;">No tables available</p>';
+    return;
+  }
+  
+  tables.forEach(table => {
+    const btn = document.createElement('button');
+    btn.className = `table-btn ${table.status} ${selectedTable === table.table_number ? 'selected' : ''}`;
+    btn.innerHTML = `
+      <i class="fas fa-chair"></i>
+      <span>Table ${table.table_number}</span>
+      <small>${table.status}</small>
+    `;
+    btn.onclick = () => selectTable(table.table_number);
+    grid.appendChild(btn);
+  });
+}
+
+function selectTable(tableId) {
+  selectedTable = tableId;
+  document.getElementById('selectedTable').textContent = `Table ${tableId}`;
+  
+  const table = tables.find(t => t.table_number === tableId);
+  if (table && table.status === 'occupied' && table.current_order) {
+    if (confirm('Load existing order for this table?')) {
+      cart = JSON.parse(table.current_order);
+      updateCartDisplay();
+    }
+  }
+  
+  renderTables();
+}
+
+// ==================== MENU FUNCTIONS ====================
+function renderCategories() {
+  const categories = ['all', ...new Set(menu.map(item => item.category))];
+  const container = document.getElementById('menuCategories');
+  if (!container) return;
+  
+  container.innerHTML = categories.map(cat => `
+    <button class="category-btn ${activeCategory === cat ? 'active' : ''}" onclick="filterCategory('${cat}')">
+      <i class="fas ${getCategoryIcon(cat)}"></i>
+      ${cat.charAt(0).toUpperCase() + cat.slice(1)}
+    </button>
+  `).join('');
+}
+
+function getCategoryIcon(category) {
+  const icons = {
+    'all': 'fa-utensils',
+    'Main': 'fa-burger',
+    'Salads': 'fa-leaf',
+    'Sides': 'fa-bowl-food',
+    'Drinks': 'fa-mug-saucer',
+    'Desserts': 'fa-ice-cream'
+  };
+  return icons[category] || 'fa-utensils';
+}
+
+function filterCategory(category) {
+  activeCategory = category;
+  renderCategories();
+  renderMenu();
+}
+
+function renderMenu() {
+  console.log('Rendering menu:', menu);
+  const container = document.getElementById('menuItems');
+  if (!container) {
+    console.error('Menu items element not found!');
+    return;
+  }
+  
+  const filtered = activeCategory === 'all' 
+    ? menu 
+    : menu.filter(item => item.category === activeCategory);
+  
+  if (!filtered || filtered.length === 0) {
+    container.innerHTML = '<p style="grid-column:1/-1; text-align:center;">No menu items available</p>';
+    return;
+  }
+  
+  // Safe rendering with fallbacks
+  container.innerHTML = filtered.map(item => {
+    // Ensure price is a number
+    const price = typeof item.price === 'number' ? item.price : parseFloat(item.price) || 0;
+    
+    return `
+      <div class="menu-item" onclick="addToCart(${item.id})">
+        <div style="font-size:3rem; text-align:center;">${item.image || '🍽️'}</div>
+        <h4>${item.name || 'Unknown'}</h4>
+        <div class="price">$${price.toFixed(2)}</div>
+        <div class="category-tag">
+          <i class="fas ${item.icon || 'fa-utensils'}"></i> ${item.category || 'Other'}
+        </div>
+        ${item.popular ? '<span style="color:#ed8936;"><i class="fas fa-fire"></i> Popular</span>' : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+// ==================== CART FUNCTIONS ====================
+function addToCart(itemId) {
+  if (!currentUser) {
+    showNotification('Please login first', 'error');
+    return;
+  }
+  
+  const item = menu.find(i => i.id === itemId);
+  const existing = cart.find(i => i.id === itemId);
+  
+  if (existing) {
+    existing.quantity++;
+  } else {
+    cart.push({
+      ...item,
+      quantity: 1,
+      note: ''
+    });
+  }
+  
+  updateCartDisplay();
+  showNotification(`${item.name} added to cart`, 'success');
+}
+
+function updateCartDisplay() {
+  const container = document.getElementById('cartItems');
+  if (!container) return;
+  
+  const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const tax = subtotal * 0.1;
+  const discountAmount = calculateDiscount(subtotal);
+  const total = subtotal + tax - discountAmount;
+  
+  if (cart.length === 0) {
+    container.innerHTML = '<p style="text-align:center; color:#718096;">Cart is empty</p>';
+  } else {
+    container.innerHTML = cart.map((item, index) => `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <div class="cart-item-name">
+            ${item.image} ${item.name} x${item.quantity}
+          </div>
+          <div class="cart-item-price">
+            $${(item.price * item.quantity).toFixed(2)}
+          </div>
+          <div class="cart-item-note">
+            <input type="text" placeholder="Add note..." value="${item.note || ''}" 
+                   onchange="updateItemNote(${index}, this.value)">
+          </div>
+        </div>
+        <div class="cart-item-actions">
+          <button class="increase" onclick="updateQuantity(${index}, 1)"><i class="fas fa-plus"></i></button>
+          <button class="decrease" onclick="updateQuantity(${index}, -1)"><i class="fas fa-minus"></i></button>
+          <button class="remove" onclick="removeItem(${index})"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+  document.getElementById('tax').textContent = tax.toFixed(2);
+  document.getElementById('discount').textContent = discountAmount.toFixed(2);
+  document.getElementById('total').textContent = total.toFixed(2);
+}
+
+function updateQuantity(index, change) {
+  cart[index].quantity += change;
+  if (cart[index].quantity <= 0) {
+    cart.splice(index, 1);
+  }
+  updateCartDisplay();
+}
+
+function removeItem(index) {
+  cart.splice(index, 1);
+  updateCartDisplay();
+  showNotification('Item removed from cart', 'info');
+}
+
+function updateItemNote(index, note) {
+  cart[index].note = note;
+}
+
+// ==================== DISCOUNT FUNCTIONS ====================
+function calculateDiscount(subtotal) {
+  if (!discount.type) return 0;
+  
+  if (discount.type === 'amount') {
+    return Math.min(discount.value, subtotal);
+  } else if (discount.type === 'percentage') {
+    return (subtotal * discount.value) / 100;
+  }
+  return 0;
+}
+
+function applyDiscount() {
+  const value = parseFloat(document.getElementById('discountValue').value);
+  const type = document.getElementById('discountType').value;
+  
+  if (isNaN(value) || value <= 0) {
+    showNotification('Please enter a valid discount', 'error');
+    return;
+  }
+  
+  discount = {type, value};
+  updateCartDisplay();
+  showNotification('Discount applied!', 'success');
+}
+
+function applyQuickDiscount(value, type) {
+  discount = {type, value};
+  updateCartDisplay();
+  showNotification(`${value}${type === 'percentage' ? '%' : '$'} discount applied!`, 'success');
+}
+
+// ==================== PAYMENT FUNCTIONS ====================
+function selectPaymentMethod(method) {
+  paymentMethod = method;
+  document.querySelectorAll('.payment-method').forEach(el => {
+    el.classList.remove('active');
+  });
+  document.querySelector(`.payment-method.${method}`).classList.add('active');
+}
+
+function splitBill() {
+  const people = parseInt(document.getElementById('splitPeople').value);
+  const total = parseFloat(document.getElementById('total').textContent);
+  
+  if (people > 1) {
+    const perPerson = total / people;
+    document.getElementById('splitResult').innerHTML = `
+      <i class="fas fa-users"></i> 
+      ${people} people: $${perPerson.toFixed(2)} each
+    `;
+  }
+}
+
+// ==================== ORDER FUNCTIONS ====================
+async function checkout() {
+  if (cart.length === 0) {
+    showNotification('Cart is empty!', 'error');
+    return;
+  }
+  
+  const total = document.getElementById('total').textContent;
+  const subtotal = document.getElementById('subtotal').textContent;
+  const items = cart.map(item => `${item.name} x${item.quantity}${item.note ? ' (' + item.note + ')' : ''}`).join(', ');
+  const note = document.getElementById('customerNote').value;
+  
+  const order = {
+    id: Date.now(),
+    table: selectedTable,
+    items: items,
+    subtotal: parseFloat(subtotal),
+    tax: parseFloat(document.getElementById('tax').textContent),
+    discount: parseFloat(document.getElementById('discount').textContent),
+    total: parseFloat(total),
+    payment: paymentMethod,
+    note: note,
+    status: 'completed',
+    time: new Date().toLocaleString(),
+    cashier: currentUser.name
+  };
+  
+  // Save to localStorage first (backup)
+  orders.unshift(order);
+  localStorage.setItem('orders', JSON.stringify(orders));
+  
+  // Try to save to server
+  const result = await saveOrderToServer(order);
+  
+  if (result.status === 'success') {
+    showNotification('Order saved to server!', 'success');
+  } else {
+    showNotification('Order saved locally (server offline)', 'warning');
+  }
+  
+  // Update table status
+  try {
+    await updateTableOnServer(selectedTable, 'available', null);
+  } catch (e) {
+    console.error('Table update failed:', e);
+  }
+  
+  const table = tables.find(t => t.table_number === selectedTable);
+  if (table) {
+    table.status = 'available';
+    table.current_order = null;
+  }
+  
+  printReceipt();
+  
+  cart = [];
+  discount = {type: null, value: 0};
+  document.getElementById('customerNote').value = '';
+  updateCartDisplay();
+  renderTables();
+  renderOrders();
+}
+
+async function holdOrder() {
+  if (cart.length === 0) {
+    showNotification('No order to hold!', 'error');
+    return;
+  }
+  
+  const heldOrder = {
+    id: Date.now(),
+    table: selectedTable,
+    cart: [...cart],
+    discount: {...discount},
+    note: document.getElementById('customerNote').value,
+    time: new Date().toLocaleString()
+  };
+  
+  // Save to localStorage first
+  heldOrders.push(heldOrder);
+  localStorage.setItem('heldOrders', JSON.stringify(heldOrders));
+  
+  // Try to save to server
+  const result = await saveHeldOrderToServer(heldOrder);
+  
+  if (result.status === 'success') {
+    showNotification('Order held on server!', 'success');
+  } else {
+    showNotification('Order held locally', 'warning');
+  }
+  
+  // Update table status
+  try {
+    await updateTableOnServer(selectedTable, 'occupied', cart);
+  } catch (e) {
+    console.error('Table update failed:', e);
+  }
+  
+  const table = tables.find(t => t.table_number === selectedTable);
+  if (table) {
+    table.status = 'occupied';
+    table.current_order = JSON.stringify(cart);
+  }
+  
+  cart = [];
+  discount = {type: null, value: 0};
+  document.getElementById('customerNote').value = '';
+  updateCartDisplay();
+  renderTables();
+}
+
+function cancelOrder() {
+  if (cart.length === 0 && confirm('Clear all items?')) {
+    cart = [];
+    discount = {type: null, value: 0};
+    document.getElementById('customerNote').value = '';
+    updateCartDisplay();
+    showNotification('Order cancelled', 'info');
+  } else if (cart.length > 0 && confirm('Are you sure you want to cancel this order?')) {
+    cart = [];
+    discount = {type: null, value: 0};
+    document.getElementById('customerNote').value = '';
+    updateCartDisplay();
+    showNotification('Order cancelled', 'info');
+  }
+}
+
+// ==================== ORDERS DISPLAY ====================
+function renderOrders(filter = 'all') {
+  const container = document.getElementById('ordersGrid');
+  if (!container) return;
+  
+  const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
+  
+  if (filtered.length === 0) {
+    container.innerHTML = '<p style="grid-column:1/-1; text-align:center;">No orders found</p>';
+    return;
+  }
+  
+  container.innerHTML = filtered.map(order => `
+    <div class="order-card ${order.status}">
+      <div class="order-header">
+        <span class="order-id">#${order.id}</span>
+        <span class="order-status">${order.status}</span>
+      </div>
+      <div><i class="fas fa-chair"></i> Table ${order.table}</div>
+      <div><i class="fas fa-shopping-bag"></i> ${order.items.substring(0, 30)}...</div>
+      <div><i class="fas fa-dollar-sign"></i> $${order.total.toFixed(2)}</div>
+      <div><i class="fas fa-clock"></i> ${order.time}</div>
+      <div style="margin-top:10px;">
+        <button class="action-btn" style="padding:5px;" onclick="reorder(${order.id})">
+          <i class="fas fa-redo"></i> Reorder
+        </button>
+        <button class="action-btn" style="padding:5px; background:#f56565;" onclick="voidOrder(${order.id})">
+          <i class="fas fa-ban"></i> Void
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function filterOrders(filter) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  await loadOrdersFromServer(filter);
+}
+
+function reorder(orderId) {
+  const order = orders.find(o => o.id === orderId);
+  if (order) {
+    showNotification('Reorder feature - would load items', 'info');
+  }
+}
+
+async function voidOrder(orderId) {
+  if (confirm('Are you sure you want to void this order?')) {
+    await voidOrderOnServer(orderId);
+    
+    const order = orders.find(o => o.id === orderId);
+    if (order) {
+      order.status = 'cancelled';
+      localStorage.setItem('orders', JSON.stringify(orders));
+      showNotification('Order voided', 'info');
+      await loadOrdersFromServer();
+    }
+  }
+}
+
+// ==================== ANALYTICS ====================
+async function showAnalytics() {
+  const modal = document.getElementById('analyticsModal');
+  modal.style.display = 'flex';
+  
+  await loadAnalyticsFromServer();
+  
+  const ctx = document.getElementById('salesChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      datasets: [{
+        label: 'Sales',
+        data: [65, 59, 80, 81, 56, 55, 40],
+        borderColor: '#667eea',
+        tension: 0.4
+      }]
+    }
+  });
+  
+  const topItems = document.getElementById('topItems');
+  topItems.innerHTML = '<p><i class="fas fa-burger"></i> Burger: 45 orders</p>';
+}
+
+function closeAnalytics() {
+  document.getElementById('analyticsModal').style.display = 'none';
+}
+
+// ==================== PRINT RECEIPT ====================
+function printReceipt() {
+  if (cart.length === 0) {
+    showNotification('No items to print', 'error');
+    return;
+  }
+  
+  const subtotal = document.getElementById('subtotal').textContent;
+  const tax = document.getElementById('tax').textContent;
+  const discount = document.getElementById('discount').textContent;
+  const total = document.getElementById('total').textContent;
+  const items = cart.map(item => 
+    `${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}${item.note ? ' (' + item.note + ')' : ''}`
+  ).join('\n');
+  
+  const w = window.open("", "Receipt", "width=400,height=600");
+  w.document.write(`
+    <html>
+    <head>
+      <title>Receipt</title>
+      <style>
+        body { font-family: 'Courier New', monospace; padding: 20px; }
+        .header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 20px; }
+        .items { margin: 20px 0; white-space: pre-line; }
+        .total { border-top: 2px solid #000; margin-top: 20px; padding-top: 20px; font-weight: bold; }
+        .footer { margin-top: 40px; text-align: center; font-size: 0.8rem; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h2>RESTAURANT POS PRO</h2>
+        <p>123 Main Street | Tel: 555-0123</p>
+        <p>Table: ${selectedTable} | Cashier: ${currentUser?.name || 'Unknown'}</p>
+        <p>${new Date().toLocaleString()}</p>
+      </div>
+      
+      <div class="items">
+        <h3>ORDER DETAILS:</h3>
+        ${items.replace(/\n/g, '<br>')}
+      </div>
+      
+      <div>
+        <p>Subtotal: $${subtotal}</p>
+        <p>Tax (10%): $${tax}</p>
+        <p>Discount: -$${discount}</p>
+        <p class="total">TOTAL: $${total}</p>
+        <p>Payment: ${paymentMethod.toUpperCase()}</p>
+      </div>
+      
+      <div class="footer">
+        <p>Thank you for dining with us!</p>
+        <p>Please come again</p>
+      </div>
+      
+      <script>
+        window.onload = function() {
+          window.print();
+          setTimeout(() => window.close(), 500);
+        }
+      <\/script>
+    </body>
+    </html>
+  `);
+}
+
+// ==================== NOTIFICATION SYSTEM ====================
+function showNotification(message, type) {
+  const notification = document.createElement("div");
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: ${type === 'success' ? '#48bb78' : type === 'error' ? '#f56565' : '#4299e1'};
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    z-index: 10000;
+    animation: slideInRight 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  `;
+  notification.innerHTML = `
+    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+    ${message}
+  `;
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    notification.style.animation = "slideOutRight 0.3s ease";
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
+}
+
+// Add CSS animations
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes slideOutRight {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+  }
+`;
+document.head.appendChild(style);
+
+// Show all tables function
+function showAllTables() {
+  renderTables();
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Page loaded, waiting for login...');
+});
+</script>
+
+</body>
+</html>
