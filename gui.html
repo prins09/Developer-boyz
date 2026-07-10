@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Wallet - University of Wolverhampton</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ============================================
+                   CSS VARIABLES & RESET
+                ============================================ */
+        :root {
+            --primary: #1a237e;
+            --primary-light: #283593;
+            --primary-dark: #0d1445;
+            --secondary: #667eea;
+            --accent: #764ba2;
+            --success: #28a745;
+            --success-light: #d4edda;
+            --danger: #dc3545;
+            --danger-light: #f8d7da;
+            --warning: #ffc107;
+            --warning-light: #fff3cd;
+            --info: #17a2b8;
+            --info-light: #cce5ff;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.15);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-lg: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f0f2f8;
+            color: var(--gray-800);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ============================================
+                   SCROLLBAR
+                ============================================ */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--gray-200);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
+
+        /* ============================================
+                   CONTAINER
+                ============================================ */
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px 24px 40px;
+        }
+
+        /* ============================================
+                   HEADER
+                ============================================ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo img {
+            height: 44px;
+            width: auto;
+        }
+
+        .header-logo h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: -0.5px;
+        }
+
+        .header-logo h1 span {
+            color: var(--secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header-right .welcome-text {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+
+        .header-right .welcome-text strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .notification-bell {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 18px;
+            color: var(--gray-700);
+        }
+
+        .notification-bell:hover {
+            background: var(--gray-200);
+            transform: scale(1.05);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-logout {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-logout i {
+            font-size: 14px;
+        }
+
+        /* ============================================
+                   NOTIFICATION DROPDOWN
+                ============================================ */
+        .notification-dropdown {
+            position: absolute;
+            top: 70px;
+            right: 24px;
+            width: 380px;
+            max-height: 420px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            overflow: hidden;
+            display: none;
+            border: 1px solid var(--gray-200);
+        }
+
+        .notification-dropdown.active {
+            display: block;
+            animation: slideDown 0.25s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .notification-header a {
+            font-size: 13px;
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .notification-header a:hover {
+            text-decoration: underline;
+        }
+
+        .notification-list {
+            max-height: 340px;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .notification-item {
+            display: flex;
+            gap: 14px;
+            padding: 12px 20px;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: var(--gray-100);
+        }
+
+        .notification-item.success {
+            border-left-color: var(--success);
+        }
+        .notification-item.warning {
+            border-left-color: var(--warning);
+        }
+        .notification-item.info {
+            border-left-color: var(--info);
+        }
+
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .notification-item.success .notification-icon {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .notification-item.warning .notification-icon {
+            background: var(--warning-light);
+            color: #856404;
+        }
+        .notification-item.info .notification-icon {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .notification-content h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 2px;
+        }
+
+        .notification-content p {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-bottom: 4px;
+        }
+
+        .notification-content small {
+            font-size: 11px;
+            color: var(--gray-500);
+        }
+
+        .no-notifications {
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        /* ============================================
+                   FLASH MESSAGES
+                ============================================ */
+        .flash-message {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 14px;
+            animation: slideDown 0.3s ease;
+            position: relative;
+        }
+
+        .flash-message.success {
+            background: var(--success-light);
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .flash-message.error {
+            background: var(--danger-light);
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .flash-message i {
+            font-size: 20px;
+        }
+
+        .flash-close {
+            margin-left: auto;
+            cursor: pointer;
+            font-size: 20px;
+            opacity: 0.6;
+            transition: var(--transition);
+            background: none;
+            border: none;
+            color: inherit;
+        }
+
+        .flash-close:hover {
+            opacity: 1;
+        }
+
+        /* ============================================
+                   DASHBOARD GRID
+                ============================================ */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        /* ============================================
+                   BALANCE CARD
+                ============================================ */
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 28px 30px;
+            border-radius: var(--radius);
+            box-shadow: 0 8px 30px rgba(26, 35, 126, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .balance-card::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+
+        .balance-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .balance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .balance-header h2 {
+            font-size: 18px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .balance-header i {
+            font-size: 24px;
+            opacity: 0.8;
+        }
+
+        .balance-amount {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 8px 0 16px;
+        }
+
+        .balance-amount .currency {
+            font-size: 28px;
+            font-weight: 600;
+            opacity: 0.7;
+            margin-right: 4px;
+        }
+
+        .balance-details {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .balance-details span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .balance-details i {
+            font-size: 14px;
+        }
+
+        /* ============================================
+                   DAILY SPENDING
+                ============================================ */
+        .daily-spending {
+            margin-top: 18px;
+            padding: 16px 18px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-sm);
+            backdrop-filter: blur(4px);
+        }
+
+        .daily-spending-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .daily-spending-header .daily-amount {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+            background: var(--success);
+        }
+
+        .progress-fill.warning {
+            background: var(--warning);
+        }
+        .progress-fill.danger {
+            background: var(--danger);
+        }
+
+        .daily-limit-text {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 6px;
+            text-align: right;
+        }
+
+        /* ============================================
+                   QUICK STATS
+                ============================================ */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px 22px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.blue {
+            background: #e8eaf6;
+            color: var(--primary);
+        }
+        .stat-icon.green {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .stat-icon.purple {
+            background: #e8dff5;
+            color: var(--accent);
+        }
+        .stat-icon.orange {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .stat-content h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gray-900);
+            line-height: 1.2;
+        }
+
+        .stat-content p {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin: 0;
+        }
+
+        /* ============================================
+                   ACTION BUTTONS
+                ============================================ */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: white;
+            text-decoration: none;
+            font-family: inherit;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-btn i {
+            font-size: 16px;
+        }
+
+        .action-btn.deposit {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        .action-btn.withdraw {
+            background: linear-gradient(135deg, #dc3545, #e74c3c);
+        }
+        .action-btn.payment {
+            background: linear-gradient(135deg, #6f42c1, #8b6fc9);
+        }
+        .action-btn.transfer {
+            background: linear-gradient(135deg, #007bff, #4dabf7);
+        }
+        .action-btn.savings {
+            background: linear-gradient(135deg, #fd7e14, #ffb347);
+        }
+        .action-btn.reports {
+            background: linear-gradient(135deg, #6c757d, #868e96);
+        }
+        .action-btn.budget {
+            background: linear-gradient(135deg, #20c997, #12b886);
+        }
+        .action-btn.recurring {
+            background: linear-gradient(135deg, #17a2b8, #0dcaf0);
+        }
+        .action-btn.emergency {
+            background: linear-gradient(135deg, #e74c3c, #fd7e14);
+        }
+
+        /* ============================================
+                   SECTION CARDS
+                ============================================ */
+        .section-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 28px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .section-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header h3 i {
+            color: var(--secondary);
+        }
+
+        .section-header .section-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-sm.primary {
+            background: var(--secondary);
+            color: white;
+        }
+        .btn-sm.primary:hover {
+            background: var(--primary);
+        }
+        .btn-sm.outline {
+            background: transparent;
+            color: var(--gray-600);
+            border: 1px solid var(--gray-300);
+        }
+        .btn-sm.outline:hover {
+            background: var(--gray-100);
+        }
+        .btn-sm.success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-sm.success:hover {
+            background: #1e7e34;
+        }
+
+        /* ============================================
+                   CHART SECTION
+                ============================================ */
+        .chart-wrapper {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px 0;
+        }
+
+        /* ============================================
+                   GOALS GRID
+                ============================================ */
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .goal-card {
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+            padding: 18px 20px;
+            transition: var(--transition);
+        }
+
+        .goal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .goal-header h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .goal-status {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 12px;
+            border-radius: 50px;
+        }
+
+        .goal-status.active {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .goal-status.completed {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .goal-amounts {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .goal-amounts span:first-child {
+            color: var(--gray-600);
+        }
+        .goal-amounts span:last-child {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .goal-progress-text {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-top: 6px;
+            text-align: right;
+        }
+
+        .goal-deadline {
+            font-size: 13px;
+            color: var(--gray-600);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .goal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .btn-goal {
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-goal.add {
+            background: var(--success);
+            color: white;
+        }
+        .btn-goal.add:hover {
+            background: #1e7e34;
+        }
+        .btn-goal.complete {
+            background: var(--secondary);
+            color: white;
+        }
+        .btn-goal.complete:hover {
+            background: var(--primary);
+        }
+
+        /* ============================================
+                   BUDGET OVERVIEW
+                ============================================ */
+        .budget-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .budget-item {
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+        }
+
+        .budget-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .budget-name {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        .budget-amount {
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        /* ============================================
+                   TRANSACTION TABLE
+                ============================================ */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: var(--gray-100);
+        }
+
+        thead th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-200);
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: var(--gray-100);
+        }
+
+        .type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .type-badge.deposit {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .type-badge.withdrawal {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+        .type-badge.payment {
+            background: #e8dff5;
+            color: var(--accent);
+        }
+        .type-badge.transfer {
+            background: #cce5ff;
+            color: var(--info);
+        }
+
+        .positive {
+            color: var(--success);
+            font-weight: 600;
+        }
+        .negative {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 3px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.completed {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .status-badge.pending {
+            background: var(--warning-light);
+            color: #856404;
+        }
+        .status-badge.failed {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        /* ============================================
+                   RECURRING CARDS
+                ============================================ */
+        .recurring-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .recurring-card {
+            background: var(--gray-100);
+            border-radius: var(--radius-sm);
+            padding: 18px 20px;
+            transition: var(--transition);
+        }
+
+        .recurring-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .recurring-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .recurring-name {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--gray-800);
+        }
+
+        .recurring-amount {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .recurring-amount.positive {
+            color: var(--success);
+        }
+        .recurring-amount.negative {
+            color: var(--danger);
+        }
+
+        .recurring-details {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            font-size: 13px;
+            color: var(--gray-600);
+        }
+
+        .recurring-details span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .recurring-details i {
+            color: var(--secondary);
+            width: 16px;
+        }
+
+        .recurring-status-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 12px;
+            border-radius: 50px;
+        }
+
+        .recurring-status-badge.active {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .recurring-status-badge.paused {
+            background: var(--warning-light);
+            color: #856404;
+        }
+
+        .recurring-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .btn-recurring {
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-recurring.toggle {
+            background: var(--warning);
+            color: var(--gray-800);
+        }
+        .btn-recurring.toggle:hover {
+            background: #e0a800;
+        }
+        .btn-recurring.delete {
+            background: var(--danger);
+            color: white;
+        }
+        .btn-recurring.delete:hover {
+            background: #c82333;
+        }
+
+        /* ============================================
+                   EMERGENCY FUND
+                ============================================ */
+        .emergency-card {
+            background: linear-gradient(135deg, #e74c3c, #fd7e14);
+            color: white;
+            padding: 24px 28px;
+            border-radius: var(--radius);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .emergency-card::before {
+            content: '🛡️';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 80px;
+            opacity: 0.15;
+        }
+
+        .emergency-card .emergency-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .emergency-card .emergency-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .emergency-card .emergency-status {
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 16px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .emergency-amounts {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 8px 0 12px;
+        }
+
+        .emergency-amounts span:last-child {
+            opacity: 0.8;
+        }
+
+        .emergency-card .progress-bar {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .emergency-card .progress-fill {
+            background: #ffd700;
+        }
+
+        .emergency-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .btn-emergency {
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-emergency:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* ============================================
+                   MODAL
+                ============================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            max-width: 560px;
+            width: 100%;
+            padding: 32px 36px;
+            box-shadow: var(--shadow-xl);
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: var(--transition);
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--gray-800);
+            transform: rotate(90deg);
+        }
+
+        .modal h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal h2 i {
+            color: var(--secondary);
+        }
+
+        .modal .modal-subtitle {
+            color: var(--gray-600);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .modal .form-group {
+            margin-bottom: 18px;
+        }
+
+        .modal .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 6px;
+        }
+
+        .modal .form-group input,
+        .modal .form-group select,
+        .modal .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .modal .form-group input:focus,
+        .modal .form-group select:focus,
+        .modal .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+
+        .modal .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .modal .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .modal .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 8px;
+        }
+
+        .modal .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
+        }
+
+        .modal .submit-btn i {
+            margin-right: 8px;
+        }
+
+        .modal .cancel-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--gray-200);
+            color: var(--gray-700);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 8px;
+        }
+
+        .modal .cancel-btn:hover {
+            background: var(--gray-300);
+        }
+
+        .modal .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        /* ============================================
+                   FOOTER
+                ============================================ */
+        .footer {
+            text-align: center;
+            padding: 20px 0 10px;
+            font-size: 13px;
+            color: var(--gray-500);
+            border-top: 1px solid var(--gray-200);
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================
+                   RESPONSIVE
+                ============================================ */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 12px 16px 30px;
+            }
+
+            .header {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .header-left {
+                justify-content: center;
+            }
+
+            .header-logo h1 {
+                font-size: 18px;
+            }
+
+            .header-right {
+                justify-content: center;
+            }
+
+            .header-right .welcome-text {
+                font-size: 13px;
+            }
+
+            .balance-amount {
+                font-size: 34px;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .action-buttons {
+                justify-content: center;
+            }
+
+            .action-btn {
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            .budget-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                padding: 24px 20px;
+            }
+
+            .modal .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal .modal-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .notification-dropdown {
+                width: calc(100% - 32px);
+                right: 16px;
+                top: 80px;
+            }
+
+            .goals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .recurring-grid {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 13px;
+            }
+            thead th,
+            tbody td {
+                padding: 8px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .balance-details {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .balance-amount {
+                font-size: 28px;
+            }
+        }
+
+        /* ============================================
+                   UTILITY
+                ============================================ */
+        .mt-2 {
+            margin-top: 8px;
+        }
+        .mt-3 {
+            margin-top: 16px;
+        }
+        .mt-4 {
+            margin-top: 24px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-muted {
+            color: var(--gray-500);
+        }
+        .fw-bold {
+            font-weight: 700;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .items-center {
+            align-items: center;
+        }
+        .justify-between {
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="app">
+
+        <!-- ==========================================
+        HEADER
+        ========================================== -->
+        <header class="header">
+            <div class="header-left">
+                <div class="header-logo">
+                    <img src="https://www.wlv.ac.uk/media/dam/wlv/images/logos/uni-logo.png" alt="University of Wolverhampton">
+                    <h1>Student <span>Wallet</span></h1>
+                </div>
+            </div>
+            <div class="header-right">
+                <span class="welcome-text">Welcome, <strong>John Smith</strong></span>
+                <button class="notification-bell" @click="toggleNotifications" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" v-if="unreadCount > 0">{{ unreadCount }}</span>
+                </button>
+                <a href="#" class="btn-logout" @click.prevent="logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </header>
+
+        <!-- ==========================================
+        NOTIFICATION DROPDOWN
+        ========================================== -->
+        <div class="notification-dropdown" :class="{ active: showNotifications }">
+            <div class="notification-header">
+                <h4>Notifications</h4>
+                <a href="#" @click.prevent="markAllRead">Mark all as read</a>
+            </div>
+            <div class="notification-list">
+                <div v-if="notifications.length === 0" class="no-notifications">
+                    <i class="fas fa-check-circle" style="font-size:24px;display:block;margin-bottom:8px;color:var(--success)"></i>
+                    All caught up!
+                </div>
+                <div v-for="notif in notifications" :key="notif.id" class="notification-item" :class="notif.type">
+                    <div class="notification-icon">
+                        <i :class="notif.icon"></i>
+                    </div>
+                    <div class="notification-content">
+                        <h5>{{ notif.title }}</h5>
+                        <p>{{ notif.message }}</p>
+                        <small>{{ notif.time }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        FLASH MESSAGES
+        ========================================== -->
+        <div v-if="flashMessage" class="flash-message" :class="flashType">
+            <i :class="flashIcon"></i>
+            {{ flashMessage }}
+            <button class="flash-close" @click="flashMessage = null">&times;</button>
+        </div>
+
+        <!-- ==========================================
+        DASHBOARD GRID
+        ========================================== -->
+        <div class="dashboard-grid">
+            <!-- Balance Card -->
+            <div class="balance-card">
+                <div class="balance-header">
+                    <h2><i class="fas fa-wallet"></i> Current Balance</h2>
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="balance-amount">
+                    <span class="currency">£</span>{{ formatCurrency(balance) }}
+                </div>
+                <div class="balance-details">
+                    <span><i class="fas fa-id-card"></i> Student ID: {{ studentId }}</span>
+                    <span><i class="fas fa-graduation-cap"></i> {{ course }}</span>
+                    <span><i class="fas fa-calendar-alt"></i> Year {{ yearOfStudy }}</span>
+                </div>
+
+                <div class="daily-spending">
+                    <div class="daily-spending-header">
+                        <span><i class="fas fa-clock"></i> Today's Spending</span>
+                        <span class="daily-amount">£{{ formatCurrency(dailySpend) }}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" :class="dailyPercent > 90 ? 'danger' : dailyPercent > 70 ? 'warning' : ''" :style="{ width: dailyPercent + '%' }"></div>
+                    </div>
+                    <div class="daily-limit-text">Limit: £{{ formatCurrency(dailyLimit) }}</div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-icon blue"><i class="fas fa-exchange-alt"></i></div>
+                    <div class="stat-content">
+                        <h3>{{ totalTransactions }}</h3>
+                        <p>Total Transactions</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green"><i class="fas fa-piggy-bank"></i></div>
+                    <div class="stat-content">
+                        <h3>{{ activeGoals }}</h3>
+                        <p>Active Savings Goals</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-content">
+                        <h3>£{{ formatCurrency(monthlyIncome) }}</h3>
+                        <p>This Month's Income</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="stat-content">
+                        <h3>{{ unreadAlerts }}</h3>
+                        <p>Unread Alerts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        ACTION BUTTONS
+        ========================================== -->
+        <div class="action-buttons">
+            <button class="action-btn deposit" @click="openModal('deposit')">
+                <i class="fas fa-plus-circle"></i> Deposit
+            </button>
+            <button class="action-btn withdraw" @click="openModal('withdraw')">
+                <i class="fas fa-minus-circle"></i> Withdraw
+            </button>
+            <button class="action-btn payment" @click="openModal('payment')">
+                <i class="fas fa-credit-card"></i> Make Payment
+            </button>
+            <button class="action-btn transfer" @click="openModal('transfer')">
+                <i class="fas fa-exchange-alt"></i> Transfer
+            </button>
+            <button class="action-btn savings" @click="openModal('savings')">
+                <i class="fas fa-piggy-bank"></i> Savings Goals
+            </button>
+            <button class="action-btn reports" @click="openModal('reports')">
+                <i class="fas fa-file-alt"></i> Reports
+            </button>
+            <button class="action-btn budget" @click="openModal('budget')">
+                <i class="fas fa-chart-pie"></i> Budget
+            </button>
+            <button class="action-btn recurring" @click="openModal('recurring')">
+                <i class="fas fa-sync"></i> Recurring
+            </button>
+            <button class="action-btn emergency" @click="openModal('emergency')">
+                <i class="fas fa-shield-alt"></i> Emergency Fund
+            </button>
+        </div>
+
+        <!-- ==========================================
+        CHART SECTION
+        ========================================== -->
+        <div class="section-card">
+            <div class="section-header">
+                <h3><i class="fas fa-chart-pie"></i> Monthly Spending by Category</h3>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="spendingChart"></canvas>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        SAVINGS GOALS
+        ========================================== -->
+        <div class="section-card" v-if="goals.length > 0">
+            <div class="section-header">
+                <h3><i class="fas fa-piggy-bank"></i> Your Savings Goals</h3>
+                <div class="section-actions">
+                    <button class="btn-sm primary" @click="openModal('savings')">
+                        <i class="fas fa-plus"></i> New Goal
+                    </button>
+                </div>
+            </div>
+            <div class="goals-grid">
+                <div v-for="goal in goals" :key="goal.id" class="goal-card">
+                    <div class="goal-header">
+                        <h4>{{ goal.name }}</h4>
+                        <span class="goal-status" :class="goal.status">{{ goal.status }}</span>
+                    </div>
+                    <div class="goal-amounts">
+                        <span>Saved: £{{ formatCurrency(goal.current) }}</span>
+                        <span>Target: £{{ formatCurrency(goal.target) }}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" :style="{ width: Math.min((goal.current / goal.target) * 100, 100) + '%' }"></div>
+                    </div>
+                    <div class="goal-progress-text">{{ Math.round((goal.current / goal.target) * 100) }}% Complete</div>
+                    <div class="goal-deadline">
+                        <i class="fas fa-calendar-alt"></i> Deadline: {{ goal.deadline }}
+                    </div>
+                    <div class="goal-actions">
+                        <button class="btn-goal add" @click="addToGoal(goal.id)"><i class="fas fa-plus"></i> Add Funds</button>
+                        <button v-if="goal.status === 'active'" class="btn-goal complete" @click="completeGoal(goal.id)">
+                            <i class="fas fa-check"></i> Complete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        BUDGET OVERVIEW
+        ========================================== -->
+        <div class="section-card" v-if="budgets.length > 0">
+            <div class="section-header">
+                <h3><i class="fas fa-chart-pie"></i> Monthly Budget</h3>
+                <div class="section-actions">
+                    <button class="btn-sm primary" @click="openModal('budget')">
+                        <i class="fas fa-plus"></i> Add Budget
+                    </button>
+                </div>
+            </div>
+            <div class="budget-grid">
+                <div v-for="budget in budgets" :key="budget.id" class="budget-item">
+                    <div class="budget-info">
+                        <span class="budget-name">{{ budget.category }}</span>
+                        <span class="budget-amount">£{{ formatCurrency(budget.spent) }} / £{{ formatCurrency(budget.limit) }}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" :class="(budget.spent / budget.limit) * 100 > 90 ? 'danger' : (budget.spent / budget.limit) * 100 > 70 ? 'warning' : ''" :style="{ width: Math.min((budget.spent / budget.limit) * 100, 100) + '%' }"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        RECURRING TRANSACTIONS
+        ========================================== -->
+        <div class="section-card" v-if="recurringTransactions.length > 0">
+            <div class="section-header">
+                <h3><i class="fas fa-sync"></i> Active Recurring Transactions</h3>
+                <div class="section-actions">
+                    <button class="btn-sm primary" @click="openModal('recurring')">
+                        <i class="fas fa-plus"></i> Add Recurring
+                    </button>
+                </div>
+            </div>
+            <div class="recurring-grid">
+                <div v-for="rec in recurringTransactions" :key="rec.id" class="recurring-card">
+                    <div class="recurring-header">
+                        <span class="recurring-name">{{ rec.name }}</span>
+                        <span class="recurring-amount" :class="rec.type === 'deposit' ? 'positive' : 'negative'">
+                            {{ rec.type === 'deposit' ? '+' : '-' }}£{{ formatCurrency(rec.amount) }}
+                        </span>
+                    </div>
+                    <div class="recurring-details">
+                        <span><i class="fas fa-calendar"></i> {{ rec.frequency }}</span>
+                        <span><i class="fas fa-tag"></i> {{ rec.category }}</span>
+                        <span><i class="fas fa-clock"></i> Next: {{ rec.nextDate }}</span>
+                    </div>
+                    <div>
+                        <span class="recurring-status-badge" :class="rec.status">{{ rec.status }}</span>
+                    </div>
+                    <div class="recurring-actions">
+                        <button class="btn-recurring toggle" @click="toggleRecurring(rec.id)">
+                            <i :class="rec.status === 'active' ? 'fas fa-pause' : 'fas fa-play'"></i>
+                            {{ rec.status === 'active' ? 'Pause' : 'Resume' }}
+                        </button>
+                        <button class="btn-recurring delete" @click="deleteRecurring(rec.id)"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        EMERGENCY FUND
+        ========================================== -->
+        <div class="section-card" v-if="emergencyFund">
+            <div class="emergency-card">
+                <div class="emergency-header">
+                    <h3><i class="fas fa-shield-alt"></i> Emergency Fund</h3>
+                    <span class="emergency-status" :class="emergencyFund.current >= emergencyFund.target ? 'achieved' : 'active'">
+                        {{ emergencyFund.current >= emergencyFund.target ? '🎉 Achieved!' : 'In Progress' }}
+                    </span>
+                </div>
+                <div class="emergency-amounts">
+                    <span>Saved: £{{ formatCurrency(emergencyFund.current) }}</span>
+                    <span>Target: £{{ formatCurrency(emergencyFund.target) }}</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" :style="{ width: Math.min((emergencyFund.current / emergencyFund.target) * 100, 100) + '%' }"></div>
+                </div>
+                <div class="emergency-actions">
+                    <button class="btn-emergency" @click="openModal('emergency_add')"><i class="fas fa-plus"></i> Add Funds</button>
+                    <button v-if="emergencyFund.current >= 10" class="btn-emergency" @click="openModal('emergency_withdraw')"><i class="fas fa-hand-holding-usd"></i> Withdraw</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        TRANSACTION HISTORY
+        ========================================== -->
+        <div class="section-card">
+            <div class="section-header">
+                <h3><i class="fas fa-history"></i> Recent Transactions</h3>
+                <div class="section-actions">
+                    <button class="btn-sm outline" @click="viewAllTransactions">View All</button>
+                    <button class="btn-sm success" @click="exportCSV"><i class="fas fa-file-csv"></i> Export</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="tx in transactions" :key="tx.id">
+                            <td>{{ tx.date }}</td>
+                            <td>
+                                <span class="type-badge" :class="tx.type">
+                                    <i :class="tx.icon"></i> {{ tx.type }}
+                                </span>
+                            </td>
+                            <td :class="tx.type === 'deposit' ? 'positive' : 'negative'">
+                                {{ tx.type === 'deposit' ? '+' : '-' }}£{{ formatCurrency(tx.amount) }}
+                            </td>
+                            <td>{{ tx.description }}</td>
+                            <td>{{ tx.category }}</td>
+                            <td><span class="status-badge" :class="tx.status">{{ tx.status }}</span></td>
+                        </tr>
+                        <tr v-if="transactions.length === 0">
+                            <td colspan="6" class="no-data">No transactions found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        FOOTER
+        ========================================== -->
+        <div class="footer">
+            <p>&copy; 2024 University of Wolverhampton. All rights reserved. | <a href="#">Privacy Policy</a></p>
+        </div>
+
+        <!-- ==========================================
+        MODAL
+        ========================================== -->
+        <div class="modal-overlay" :class="{ active: modalOpen }" @click.self="closeModal">
+            <div class="modal">
+                <button class="modal-close" @click="closeModal">&times;</button>
+                <h2>
+                    <i :class="modalIcon"></i> {{ modalTitle }}
+                </h2>
+                <p class="modal-subtitle" v-if="modalSubtitle">{{ modalSubtitle }}</p>
+
+                <!-- Modal content based on type -->
+                <div v-if="modalType === 'deposit' || modalType === 'withdraw' || modalType === 'payment'">
+                    <div class="form-group">
+                        <label>Amount (£)</label>
+                        <input type="number" step="0.01" min="0.01" v-model="form.amount" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" v-model="form.description" :placeholder="modalType === 'deposit' ? 'e.g., Bank transfer' : modalType === 'withdraw' ? 'e.g., ATM withdrawal' : 'e.g., Tuition fee'">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select v-model="form.category">
+                            <option value="food">Food & Dining</option>
+                            <option value="transport">Transport</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="education">Education</option>
+                            <option value="housing">Housing</option>
+                            <option value="utilities">Utilities</option>
+                            <option value="health">Health</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div v-if="modalType === 'deposit' || modalType === 'withdraw'" class="form-group">
+                        <label>Payment Method</label>
+                        <select v-model="form.paymentMethod">
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="debit_card">Debit Card</option>
+                            <option value="credit_card">Credit Card</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+                    <div v-if="modalType === 'transfer'" class="form-group">
+                        <label>Recipient Email</label>
+                        <input type="email" v-model="form.recipient" placeholder="student@wlv.ac.uk">
+                    </div>
+                    <div class="form-group">
+                        <label>Notes (Optional)</label>
+                        <textarea v-model="form.notes" rows="2" placeholder="Additional notes..."></textarea>
+                    </div>
+                    <button class="submit-btn" @click="submitTransaction">
+                        <i class="fas fa-check-circle"></i> Process Transaction
+                    </button>
+                </div>
+
+                <!-- Savings Goal Modal -->
+                <div v-if="modalType === 'savings'">
+                    <div class="form-group">
+                        <label>Goal Name</label>
+                        <input type="text" v-model="form.goalName" placeholder="e.g., New Laptop">
+                    </div>
+                    <div class="form-group">
+                        <label>Target Amount (£)</label>
+                        <input type="number" step="0.01" min="0.01" v-model="form.goalTarget" placeholder="500.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Deadline</label>
+                        <input type="date" v-model="form.goalDeadline">
+                    </div>
+                    <button class="submit-btn" @click="createGoal">
+                        <i class="fas fa-save"></i> Create Goal
+                    </button>
+                </div>
+
+                <!-- Budget Modal -->
+                <div v-if="modalType === 'budget'">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select v-model="form.budgetCategory">
+                            <option value="food">Food & Dining</option>
+                            <option value="transport">Transport</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="education">Education</option>
+                            <option value="housing">Housing</option>
+                            <option value="utilities">Utilities</option>
+                            <option value="health">Health</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Monthly Budget (£)</label>
+                        <input type="number" step="0.01" min="0" v-model="form.budgetAmount" placeholder="100.00">
+                    </div>
+                    <button class="submit-btn" @click="setBudget">
+                        <i class="fas fa-save"></i> Set Budget
+                    </button>
+                </div>
+
+                <!-- Recurring Modal -->
+                <div v-if="modalType === 'recurring'">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" v-model="form.recName" placeholder="e.g., Monthly Rent">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Amount (£)</label>
+                            <input type="number" step="0.01" min="0.01" v-model="form.recAmount" placeholder="500.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Frequency</label>
+                            <select v-model="form.recFrequency">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="biweekly">Bi-Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select v-model="form.recType">
+                                <option value="payment">Payment (Expense)</option>
+                                <option value="deposit">Deposit (Income)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select v-model="form.recCategory">
+                                <option value="food">Food & Dining</option>
+                                <option value="transport">Transport</option>
+                                <option value="shopping">Shopping</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="education">Education</option>
+                                <option value="housing">Housing</option>
+                                <option value="utilities">Utilities</option>
+                                <option value="health">Health</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" v-model="form.recStartDate">
+                    </div>
+                    <button class="submit-btn" @click="addRecurring">
+                        <i class="fas fa-save"></i> Add Recurring Transaction
+                    </button>
+                </div>
+
+                <!-- Emergency Fund Add -->
+                <div v-if="modalType === 'emergency_add'">
+                    <div class="form-group">
+                        <label>Amount (£)</label>
+                        <input type="number" step="0.01" min="1" v-model="form.emergencyAmount" placeholder="25.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Notes (Optional)</label>
+                        <textarea v-model="form.emergencyNotes" rows="2" placeholder="Monthly contribution..."></textarea>
+                    </div>
+                    <button class="submit-btn" @click="addEmergencyFunds">
+                        <i class="fas fa-plus"></i> Add to Emergency Fund
+                    </button>
+                </div>
+
+                <!-- Emergency Fund Withdraw -->
+                <div v-if="modalType === 'emergency_withdraw'">
+                    <div class="form-group">
+                        <label>Amount to Withdraw (£)</label>
+                        <input type="number" step="0.01" min="1" v-model="form.emergencyWithdraw" :max="emergencyFund ? emergencyFund.current : 0">
+                        <small v-if="emergencyFund">Available: £{{ formatCurrency(emergencyFund.current) }}</small>
+                    </div>
+                    <button class="submit-btn" @click="withdrawEmergency">
+                        <i class="fas fa-hand-holding-usd"></i> Withdraw
+                    </button>
+                </div>
+
+                <!-- Reports -->
+                <div v-if="modalType === 'reports'">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" v-model="form.reportStart">
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" v-model="form.reportEnd">
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="submit-btn" @click="generateReport"><i class="fas fa-filter"></i> Apply Filter</button>
+                        <button class="cancel-btn" @click="generatePDF"><i class="fas fa-file-pdf"></i> Generate PDF</button>
+                    </div>
+                </div>
+
+                <!-- Cancel for all modals -->
+                <button v-if="modalType !== 'reports'" class="cancel-btn" style="margin-top:12px;" @click="closeModal">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+    VUE & CHART.JS
+    ========================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.min.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                // User data
+                balance: 1250.75,
+                studentId: 'WLV2024001',
+                course: 'Computer Science',
+                yearOfStudy: 2,
+                dailySpend: 32.50,
+                dailyLimit: 50.00,
+                totalTransactions: 47,
+                activeGoals: 3,
+                monthlyIncome: 875.00,
+                unreadAlerts: 2,
+                unreadCount: 3,
+
+                // Notifications
+                showNotifications: false,
+                notifications: [
+                    { id: 1, type: 'success', icon: 'fas fa-check-circle', title: 'Deposit Received',
+                        message: '£50.00 has been added to your account.', time: '2 hours ago' },
+                    { id: 2, type: 'warning', icon: 'fas fa-exclamation-triangle', title: 'Low Balance Alert',
+                        message: 'Your balance is below £100. Consider adding funds.', time: '1 day ago' },
+                    { id: 3, type: 'info', icon: 'fas fa-info-circle', title: 'Savings Goal Update',
+                        message: 'You\'re 75% towards your Laptop goal!', time: '3 days ago' },
+                ],
+
+                // Flash message
+                flashMessage: null,
+                flashType: 'success',
+
+                // Goals
+                goals: [
+                    { id: 1, name: 'New Laptop', current: 750, target: 1000, status: 'active',
+                    deadline: '15/12/2024' },
+                    { id: 2, name: 'Spring Break Trip', current: 320, target: 600, status: 'active',
+                    deadline: '20/03/2025' },
+                    { id: 3, name: 'Graduation Fund', current: 1200, target: 2000, status: 'active',
+                        deadline: '30/06/2025' },
+                ],
+
+                // Budgets
+                budgets: [
+                    { id: 1, category: 'Food & Dining', spent: 215, limit: 400 },
+                    { id: 2, category: 'Transport', spent: 85, limit: 150 },
+                    { id: 3, category: 'Entertainment', spent: 120, limit: 200 },
+                    { id: 4, category: 'Shopping', spent: 45, limit: 100 },
+                ],
+
+                // Recurring
+                recurringTransactions: [
+                    { id: 1, name: 'Monthly Rent', amount: 450, frequency: 'Monthly', type: 'payment',
+                        category: 'housing', nextDate: '01/12/2024', status: 'active' },
+                    { id: 2, name: 'Netflix Subscription', amount: 10.99, frequency: 'Monthly', type: 'payment',
+                        category: 'entertainment', nextDate: '15/11/2024', status: 'active' },
+                    { id: 3, name: 'Part-time Salary', amount: 400, frequency: 'Monthly', type: 'deposit',
+                        category: 'other', nextDate: '25/11/2024', status: 'active' },
+                ],
+
+                // Emergency Fund
+                emergencyFund: {
+                    current: 275,
+                    target: 500
+                },
+
+                // Transactions
+                transactions: [
+                    { id: 1, date: '15/11/2024 14:30', type: 'deposit', icon: 'fa-arrow-down', amount: 200,
+                        description: 'Student Loan Payment', category: 'Education', status: 'completed' },
+                    { id: 2, date: '14/11/2024 10:15', type: 'withdrawal', icon: 'fa-arrow-up', amount: 45.50,
+                        description: 'ATM Withdrawal', category: 'Other', status: 'completed' },
+                    { id: 3, date: '13/11/2024 16:45', type: 'payment', icon: 'fa-credit-card', amount: 120,
+                        description: 'Library Fine Payment', category: 'Education', status: 'completed' },
+                    { id: 4, date: '12/11/2024 09:00', type: 'deposit', icon: 'fa-arrow-down', amount: 50,
+                        description: 'Birthday Gift', category: 'Gift', status: 'completed' },
+                    { id: 5, date: '11/11/2024 20:30', type: 'payment', icon: 'fa-credit-card', amount: 32.75,
+                        description: 'Netflix Subscription', category: 'Entertainment', status: 'completed' },
+                ],
+
+                // Modal
+                modalOpen: false,
+                modalType: '',
+                modalTitle: '',
+                modalIcon: '',
+                modalSubtitle: '',
+
+                // Form
+                form: {
+                    amount: '',
+                    description: '',
+                    category: 'other',
+                    paymentMethod: 'bank_transfer',
+                    recipient: '',
+                    notes: '',
+                    goalName: '',
+                    goalTarget: '',
+                    goalDeadline: '',
+                    budgetCategory: 'food',
+                    budgetAmount: '',
+                    recName: '',
+                    recAmount: '',
+                    recFrequency: 'monthly',
+                    recType: 'payment',
+                    recCategory: 'other',
+                    recStartDate: '',
+                    emergencyAmount: '',
+                    emergencyNotes: '',
+                    emergencyWithdraw: '',
+                    reportStart: '',
+                    reportEnd: '',
+                },
+
+                // Chart instance
+                chartInstance: null,
+            },
+
+            computed: {
+                dailyPercent() {
+                    return Math.min((this.dailySpend / this.dailyLimit) * 100, 100);
+                },
+                flashIcon() {
+                    return this.flashType === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+                },
+            },
+
+            methods: {
+                formatCurrency(value) {
+                    return Number(value).toFixed(2);
+                },
+
+                toggleNotifications() {
+                    this.showNotifications = !this.showNotifications;
+                },
+
+                markAllRead() {
+                    this.unreadCount = 0;
+                    this.unreadAlerts = 0;
+                    this.showNotifications = false;
+                    this.setFlash('All notifications marked as read', 'success');
+                },
+
+                setFlash(message, type = 'success') {
+                    this.flashMessage = message;
+                    this.flashType = type;
+                    setTimeout(() => { this.flashMessage = null; }, 5000);
+                },
+
+                logout() {
+                    if (confirm('Are you sure you want to logout?')) {
+                        this.setFlash('Logged out successfully', 'success');
+                        // In real app, redirect to login
+                    }
+                },
+
+                openModal(type) {
+                    this.modalType = type;
+                    this.modalOpen = true;
+                    this.resetForm();
+
+                    // Set modal title and icon
+                    const titles = {
+                        deposit: ['Deposit Funds', 'fa-plus-circle', 'Add money to your wallet'],
+                        withdraw: ['Withdraw Funds', 'fa-minus-circle', 'Withdraw money from your wallet'],
+                        payment: ['Make Payment', 'fa-credit-card', 'Pay for goods or services'],
+                        transfer: ['Transfer Funds', 'fa-exchange-alt', 'Send money to another student'],
+                        savings: ['Create Savings Goal', 'fa-piggy-bank', 'Set a new savings target'],
+                        budget: ['Set Budget', 'fa-chart-pie', 'Create a monthly budget category'],
+                        recurring: ['Add Recurring Transaction', 'fa-sync', 'Set up a recurring payment or income'],
+                        emergency_add: ['Add to Emergency Fund', 'fa-shield-alt', 'Build your safety net'],
+                        emergency_withdraw: ['Withdraw from Emergency Fund', 'fa-hand-holding-usd',
+                            'Only for genuine emergencies'
+                        ],
+                        reports: ['Generate Report', 'fa-file-alt', 'View financial summary'],
+                    };
+
+                    const [title, icon, subtitle] = titles[type] || ['Transaction', 'fa-cog', ''];
+                    this.modalTitle = title;
+                    this.modalIcon = 'fas ' + icon;
+                    this.modalSubtitle = subtitle;
+
+                    // Set default dates for reports
+                    if (type === 'reports') {
+                        const now = new Date();
+                        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+                        this.form.reportStart = firstDay.toISOString().split('T')[0];
+                        this.form.reportEnd = now.toISOString().split('T')[0];
+                    }
+
+                    // Set default start date for recurring
+                    if (type === 'recurring') {
+                        this.form.recStartDate = new Date().toISOString().split('T')[0];
+                    }
+                },
+
+                closeModal() {
+                    this.modalOpen = false;
+                    this.resetForm();
+                },
+
+                resetForm() {
+                    this.form = {
+                        amount: '',
+                        description: '',
+                        category: 'other',
+                        paymentMethod: 'bank_transfer',
+                        recipient: '',
+                        notes: '',
+                        goalName: '',
+                        goalTarget: '',
+                        goalDeadline: '',
+                        budgetCategory: 'food',
+                        budgetAmount: '',
+                        recName: '',
+                        recAmount: '',
+                        recFrequency: 'monthly',
+                        recType: 'payment',
+                        recCategory: 'other',
+                        recStartDate: '',
+                        emergencyAmount: '',
+                        emergencyNotes: '',
+                        emergencyWithdraw: '',
+                        reportStart: '',
+                        reportEnd: '',
+                    };
+                },
+
+                submitTransaction() {
+                    const amount = parseFloat(this.form.amount);
+                    if (!amount || amount <= 0) {
+                        this.setFlash('Please enter a valid amount', 'error');
+                        return;
+                    }
+
+                    const type = this.modalType;
+                    const msg = `${type.charAt(0).toUpperCase() + type.slice(1)} of £${this.formatCurrency(amount)} processed successfully!`;
+                    this.setFlash(msg, 'success');
+
+                    // Update balance
+                    if (type === 'deposit') {
+                        this.balance += amount;
+                    } else {
+                        this.balance -= amount;
+                    }
+
+                    // Add to transactions
+                    const now = new Date();
+                    const dateStr = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB', { hour: '2-digit',
+                        minute: '2-digit' });
+                    this.transactions.unshift({
+                        id: Date.now(),
+                        date: dateStr,
+                        type: type,
+                        icon: type === 'deposit' ? 'fa-arrow-down' : type === 'withdrawal' ? 'fa-arrow-up' :
+                            'fa-credit-card',
+                        amount: amount,
+                        description: this.form.description || (type === 'deposit' ? 'Deposit' : type === 'withdraw' ?
+                            'Withdrawal' : 'Payment'),
+                        category: this.form.category || 'other',
+                        status: 'completed',
+                    });
+
+                    this.closeModal();
+                },
+
+                createGoal() {
+                    if (!this.form.goalName || !this.form.goalTarget || parseFloat(this.form.goalTarget) <= 0) {
+                        this.setFlash('Please fill in all fields correctly', 'error');
+                        return;
+                    }
+                    this.goals.push({
+                        id: Date.now(),
+                        name: this.form.goalName,
+                        current: 0,
+                        target: parseFloat(this.form.goalTarget),
+                        status: 'active',
+                        deadline: this.form.goalDeadline ? new Date(this.form.goalDeadline).toLocaleDateString(
+                            'en-GB') : 'No deadline',
+                    });
+                    this.activeGoals = this.goals.filter(g => g.status === 'active').length;
+                    this.setFlash(`Savings goal "${this.form.goalName}" created!`, 'success');
+                    this.closeModal();
+                },
+
+                addToGoal(id) {
+                    const amount = prompt('Enter amount to add (£):');
+                    if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                        const goal = this.goals.find(g => g.id === id);
+                        if (goal) {
+                            goal.current += parseFloat(amount);
+                            this.setFlash(`Added £${this.formatCurrency(amount)} to "${goal.name}"`, 'success');
+                            // Add transaction
+                            const now = new Date();
+                            this.transactions.unshift({
+                                id: Date.now(),
+                                date: now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB',
+                                { hour: '2-digit', minute: '2-digit' }),
+                                type: 'withdrawal',
+                                icon: 'fa-arrow-up',
+                                amount: parseFloat(amount),
+                                description: `Savings: ${goal.name}`,
+                                category: 'savings',
+                                status: 'completed',
+                            });
+                            this.balance -= parseFloat(amount);
+                        }
+                    }
+                },
+
+                completeGoal(id) {
+                    if (confirm('Mark this goal as completed?')) {
+                        const goal = this.goals.find(g => g.id === id);
+                        if (goal) {
+                            goal.status = 'completed';
+                            this.activeGoals = this.goals.filter(g => g.status === 'active').length;
+                            this.setFlash(`"${goal.name}" completed! 🎉`, 'success');
+                        }
+                    }
+                },
+
+                setBudget() {
+                    if (!this.form.budgetCategory || !this.form.budgetAmount || parseFloat(this.form.budgetAmount) <=
+                        0) {
+                        this.setFlash('Please enter a valid budget amount', 'error');
+                        return;
+                    }
+                    const existing = this.budgets.find(b => b.category === this.form.budgetCategory);
+                    if (existing) {
+                        existing.limit = parseFloat(this.form.budgetAmount);
+                        this.setFlash(`Budget for "${this.form.budgetCategory}" updated!`, 'success');
+                    } else {
+                        this.budgets.push({
+                            id: Date.now(),
+                            category: this.form.budgetCategory,
+                            spent: 0,
+                            limit: parseFloat(this.form.budgetAmount),
+                        });
+                        this.setFlash(`Budget for "${this.form.budgetCategory}" created!`, 'success');
+                    }
+                    this.closeModal();
+                },
+
+                addRecurring() {
+                    if (!this.form.recName || !this.form.recAmount || parseFloat(this.form.recAmount) <= 0) {
+                        this.setFlash('Please fill in all required fields', 'error');
+                        return;
+                    }
+                    this.recurringTransactions.push({
+                        id: Date.now(),
+                        name: this.form.recName,
+                        amount: parseFloat(this.form.recAmount),
+                        frequency: this.form.recFrequency,
+                        type: this.form.recType,
+                        category: this.form.recCategory,
+                        nextDate: this.form.recStartDate ? new Date(this.form.recStartDate).toLocaleDateString(
+                            'en-GB') : 'Today',
+                        status: 'active',
+                    });
+                    this.setFlash(`Recurring "${this.form.recName}" added!`, 'success');
+                    this.closeModal();
+                },
+
+                toggleRecurring(id) {
+                    const rec = this.recurringTransactions.find(r => r.id === id);
+                    if (rec) {
+                        rec.status = rec.status === 'active' ? 'paused' : 'active';
+                        this.setFlash(`Recurring "${rec.name}" ${rec.status === 'active' ? 'resumed' : 'paused'}`, 'success');
+                    }
+                },
+
+                deleteRecurring(id) {
+                    if (confirm('Delete this recurring transaction?')) {
+                        this.recurringTransactions = this.recurringTransactions.filter(r => r.id !== id);
+                        this.setFlash('Recurring transaction deleted', 'success');
+                    }
+                },
+
+                addEmergencyFunds() {
+                    const amount = parseFloat(this.form.emergencyAmount);
+                    if (!amount || amount <= 0) {
+                        this.setFlash('Please enter a valid amount', 'error');
+                        return;
+                    }
+                    this.emergencyFund.current += amount;
+                    this.balance -= amount;
+                    this.setFlash(`Added £${this.formatCurrency(amount)} to emergency fund!`, 'success');
+                    this.closeModal();
+                },
+
+                withdrawEmergency() {
+                    const amount = parseFloat(this.form.emergencyWithdraw);
+                    if (!amount || amount <= 0 || amount > this.emergencyFund.current) {
+                        this.setFlash('Invalid amount or insufficient funds', 'error');
+                        return;
+                    }
+                    this.emergencyFund.current -= amount;
+                    this.balance += amount;
+                    this.setFlash(`Withdrew £${this.formatCurrency(amount)} from emergency fund`, 'success');
+                    this.closeModal();
+                },
+
+                generateReport() {
+                    this.setFlash('Report generated for the selected period!', 'success');
+                    this.closeModal();
+                },
+
+                generatePDF() {
+                    this.setFlash('PDF report generated! (Download would start)', 'success');
+                    this.closeModal();
+                },
+
+                viewAllTransactions() {
+                    this.setFlash('Viewing all transactions', 'success');
+                },
+
+                exportCSV() {
+                    this.setFlash('CSV export downloaded!', 'success');
+                },
+
+                initChart() {
+                    const ctx = document.getElementById('spendingChart').getContext('2d');
+                    if (this.chartInstance) {
+                        this.chartInstance.destroy();
+                    }
+                    this.chartInstance = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Food & Dining', 'Transport', 'Entertainment', 'Shopping', 'Education',
+                                'Housing', 'Utilities', 'Other'
+                            ],
+                            datasets: [{
+                                data: [215, 85, 120, 45, 60, 30, 20, 15],
+                                backgroundColor: [
+                                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                                    '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+                                ],
+                                borderWidth: 2,
+                                borderColor: '#fff',
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        padding: 20,
+                                        usePointStyle: true,
+                                        pointStyle: 'circle',
+                                    }
+                                }
+                            },
+                            cutout: '65%',
+                        }
+                    });
+                },
+            },
+
+            mounted() {
+                // Initialize chart
+                this.$nextTick(() => {
+                    this.initChart();
+                });
+
+                // Auto-hide flash messages
+                setInterval(() => {
+                    // Flash auto-hide handled in setFlash
+                }, 1000);
+            },
+
+            watch: {
+                modalOpen(val) {
+                    if (val) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = '';
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

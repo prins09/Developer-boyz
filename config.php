@@ -1,37 +1,18 @@
 <?php
-session_start();
+// Database configuration for XAMPP
+$host = 'localhost';
+$username = 'root';
+$password = '';
+$database = 'university_wallet';
 
-// Database configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'restaurant_pos');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Create connection
+$conn = mysqli_connect($host, $username, $password, $database);
 
-try {
-    $pdo = new PDO(
-        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
-        DB_USER,
-        DB_PASS,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false
-        ]
-    );
-} catch(PDOException $e) {
-    die(json_encode(['status' => 'error', 'message' => 'Database connection failed']));
+// Check connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
-function sendResponse($status, $message, $data = null) {
-    echo json_encode([
-        'status' => $status,
-        'message' => $message,
-        'data' => $data
-    ]);
-    exit;
-}
-
-function isLoggedIn() {
-    return isset($_SESSION['user_id']);
-}
+// Set timezone
+date_default_timezone_set('Europe/London');
 ?>

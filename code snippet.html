@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Wallet - Code Snippets</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .snippet-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .snippet-card {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            transition: all 0.3s;
+        }
+
+        .snippet-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .snippet-header {
+            padding: 16px 20px;
+            background: #0f172a;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .snippet-header .title {
+            font-weight: 700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .snippet-header .title i {
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .snippet-header .badge {
+            font-size: 11px;
+            padding: 3px 14px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .badge.vue {
+            background: #42b883;
+            color: #0f172a;
+        }
+        .badge.css {
+            background: #2965f1;
+            color: white;
+        }
+        .badge.js {
+            background: #f7df1e;
+            color: #0f172a;
+        }
+        .badge.html {
+            background: #e34f26;
+            color: white;
+        }
+        .badge.php {
+            background: #777bb3;
+            color: white;
+        }
+        .badge.sql {
+            background: #00758f;
+            color: white;
+        }
+
+        .snippet-body {
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .snippet-body pre {
+            background: #0f172a;
+            border-radius: 10px;
+            padding: 16px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #e2e8f0;
+            margin: 0;
+        }
+
+        .snippet-body pre .comment {
+            color: #64748b;
+        }
+        .snippet-body pre .keyword {
+            color: #818cf8;
+        }
+        .snippet-body pre .string {
+            color: #34d399;
+        }
+        .snippet-body pre .function {
+            color: #fbbf24;
+        }
+        .snippet-body pre .variable {
+            color: #f472b6;
+        }
+        .snippet-body pre .property {
+            color: #60a5fa;
+        }
+        .snippet-body pre .tag {
+            color: #f87171;
+        }
+        .snippet-body pre .attr {
+            color: #fbbf24;
+        }
+        .snippet-body pre .value {
+            color: #34d399;
+        }
+        .snippet-body pre .operator {
+            color: #c084fc;
+        }
+
+        .snippet-desc {
+            padding: 12px 20px 16px;
+            border-top: 1px solid #334155;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .snippet-desc strong {
+            color: #e2e8f0;
+        }
+
+        .copy-btn {
+            background: #334155;
+            border: none;
+            color: #94a3b8;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .copy-btn:hover {
+            background: #475569;
+            color: white;
+        }
+
+        .copy-btn.copied {
+            background: #22c55e;
+            color: white;
+        }
+
+        /* ==========================================
+           RESPONSIVE
+        ========================================== */
+        @media (max-width: 600px) {
+            body {
+                padding: 16px 12px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .snippet-body pre {
+                font-size: 12px;
+                padding: 12px;
+            }
+            .snippet-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* Scrollbar */
+        pre::-webkit-scrollbar {
+            height: 6px;
+        }
+        pre::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        pre::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        pre::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ==========================================
+        HEADER
+        ========================================== -->
+        <div class="header">
+            <h1>📱 Student Wallet — Code Snippets</h1>
+            <p>Essential code snippets for the mobile application · Vue.js + PHP + MySQL</p>
+        </div>
+
+        <!-- ==========================================
+        SNIPPET GRID
+        ========================================== -->
+        <div class="snippet-grid">
+
+            <!-- ==========================================
+            SNIPPET 1: Vue Component - Dashboard
+            ========================================== -->
+            <div class="snippet-card">
+                <div class="snippet-header">
+                    <span class="title"><i class="fab fa-vuejs"></i> Dashboard Component</span>
+                    <div>
+                        <span class="badge vue">Vue</span>
+                        <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                    </div>
+                </div>
+                <div class="snippet-body">
+                    <pre id="code1">&lt;template&gt;
+  &lt;div class="dashboard"&gt;
+    &lt;!-- Balance Card --&gt;
+    &lt;div class="balance-card"&gt;
+      &lt;div class="label"&gt;Available Balance&lt;/div&gt;
+      &lt;div class="amount"&gt;
+        &lt;span class="currency"&gt;£&lt;/span&gt;{{ formatCurrency(balance) }}
+      &lt;/div&gt;
+      &lt;div class="row"&gt;
+        &lt;span&gt;&lt;i class="fas fa-id-card"&gt;&lt;/i&gt; {{ studentId }}&lt;/span&gt;
+        &lt;span&gt;&lt;i class="fas fa-graduation-cap"&gt;&lt;/i&gt; {{ course }}&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;!-- Daily Spending --&gt;
+      &lt;div class="daily-spending"&gt;
+        &lt;div class="ds-header"&gt;
+          &lt;span&gt;Today's Spending&lt;/span&gt;
+          &lt;span class="ds-amount"&gt;£{{ formatCurrency(dailySpend) }}&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class="progress"&gt;
+          &lt;div class="fill" 
+               :class="dailyPercent > 90 ? 'danger' : dailyPercent > 70 ? 'warning' : ''"
+               :style="{ width: dailyPercent + '%' }"&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="ds-limit"&gt;Limit: £{{ formatCurrency(dailyLimit) }}&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Quick Stats --&gt;
+    &lt;div class="quick-stats"&gt;
+      &lt;div class="stat-item" v-for="stat in stats" :key="stat.label"&gt;
+        &lt;span class="stat-icon" :class="stat.color"&gt;&lt;i :class="stat.icon"&gt;&lt;/i&gt;&lt;/span&gt;
+        &lt;div class="stat-number"&gt;{{ stat.value }}&lt;/div&gt;
+        &lt;div class="stat-label"&gt;{{ stat.label }}&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Action Grid --&gt;
+    &lt;div class="action-grid"&gt;
+      &lt;button v-for="action in actions" :key="action.type"
+              class="action-item" @click="openSheet(action.type)"&gt;
+        &lt;span class="action-icon" :class="action.color"&gt;
+          &lt;i :class="action.icon"&gt;&lt;/i&gt;
+        &lt;/span&gt;
+        &lt;span class="action-label"&gt;{{ action.label }}&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  data() {
+    return {
+      balance: 1250.75,
+      studentId: 'WLV2024001',
+      course: 'Computer Science',
+      dailySpend: 32.50,
+      dailyLimit: 50.00,
+      stats: [
+        { label: 'Transactions', value: 47, icon: 'fas fa-exchange-alt', color: 'blue' },
+        { label: 'Savings Goals', value: 3, icon: 'fas fa-piggy-bank', color: 'green' },
+        { label: 'Monthly Income', value: '£875', icon: 'fas fa-chart-line', color: 'purple' },
+        { label: 'Alerts', value: 2, icon: 'fas fa-exclamation-triangle', color: 'orange' },
+      ],
+      actions: [
+        { type: 'deposit', label: 'Deposit', icon: 'fas fa-plus', color: 'green' },
+        { type: 'withdraw', label: 'Withdraw', icon: 'fas fa-minus', color: 'red' },
+        { type: 'payment', label: 'Pay', icon: 'fas fa-credit-card', color: 'purple' },
+        { type: 'transfer', label: 'Transfer', icon: 'fas fa-exchange-alt', color: 'blue' },
+        { type: 'savings', label: 'Save', icon: 'fas fa-piggy-bank', color: 'orange' },
+      ]
+    }
+  },
+  computed: {
+    dailyPercent() {
+      return Math.min((this.dailySpend / this.dailyLimit) * 100, 100);
+    }
+  },
+  methods: {
+    formatCurrency(value) {
+      return Number(value).toFixed(2);
+    },
+    openSheet(type) {
+      this.$emit('open-sheet', type);
+    }
+  }
+}
+&lt;/script&gt;</pre>
+                </div>
+                <div class="snippet-desc">
+                    <strong>Vue Component:</strong> Main dashboard with balance card, quick stats, and action grid. Uses computed properties and emits for sheet interactions.
+                </div>
+            </div>
+
+            <!-- ==========================================
+            SNIPPET 2: PHP - Deposit Processing
+            ========================================== -->
+            <div class="snippet-card">
+                <div class="snippet-header">
+                    <span class="title"><i class="fab fa-php"></i> Deposit Processing</span>
+                    <div>
+                        <span class="badge php">PHP</span>
+                        <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                    </div>
+                </div>
+                <div class="snippet-body">
+                    <pre id="code2">&lt;?php
+// deposit.php - Process student deposits
+session_start();
+include('config.php');
+
+if(!isset($_SESSION['student_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$student_id = $_SESSION['student_id'];
+
+// Get student data
+$student_query = "SELECT * FROM students WHERE student_id = '$student_id'";
+$student_result = mysqli_query($conn, $student_query);
+$student = mysqli_fetch_assoc($student_result);
+
+// Handle deposit
+if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deposit'])) {
+    $amount = floatval($_POST['amount']);
+    $description = mysqli_real_escape_string($conn, $_POST['description']);
+    $category = mysqli_real_escape_string($conn, $_POST['category'] ?? 'deposit');
+    $payment_method = mysqli_real_escape_string($conn, $_POST['payment_method']);
+    
+    // Validate
+    if($amount <= 0) {
+        $_SESSION['error'] = "Amount must be greater than 0";
+        header("Location: deposit.php");
+        exit();
+    }
+    
+    if($amount > 10000) {
+        $_SESSION['error'] = "Maximum deposit is £10,000";
+        header("Location: deposit.php");
+        exit();
+    }
+    
+    // Check daily limit
+    $today = date('Y-m-d');
+    $daily_query = "SELECT COALESCE(SUM(amount), 0) as total 
+                    FROM transactions 
+                    WHERE student_id = '$student_id' 
+                    AND transaction_type = 'deposit' 
+                    AND DATE(transaction_date) = '$today'";
+    $daily_result = mysqli_query($conn, $daily_query);
+    $daily_total = mysqli_fetch_assoc($daily_result)['total'];
+    
+    if($daily_total + $amount > 500) {
+        $_SESSION['error'] = "Daily deposit limit of £500 exceeded";
+        header("Location: deposit.php");
+        exit();
+    }
+    
+    // Process deposit
+    $new_balance = $student['balance'] + $amount;
+    $update_query = "UPDATE students SET balance = '$new_balance' 
+                      WHERE student_id = '$student_id'";
+    
+    if(mysqli_query($conn, $update_query)) {
+        $reference = 'DEP' . date('Ymd') . rand(1000, 9999);
+        $insert_query = "INSERT INTO transactions 
+                         (student_id, transaction_type, amount, description, 
+                          category, reference_number, status, payment_method) 
+                         VALUES ('$student_id', 'deposit', '$amount', 
+                                 '$description', '$category', '$reference', 
+                                 'completed', '$payment_method')";
+        
+        if(mysqli_query($conn, $insert_query)) {
+            // Create notification
+            $notif_query = "INSERT INTO notifications 
+                            (student_id, title, message, type) 
+                            VALUES ('$student_id', 'Deposit Successful', 
+                                    '£$amount added to your account. New balance: £$new_balance', 
+                                    'success')";
+            mysqli_query($conn, $notif_query);
+            
+            $_SESSION['success'] = "Deposit of £" . number_format($amount, 2) . " completed!";
+            header("Location: index.php");
+            exit();
+        }
+    }
+    
+    $_SESSION['error'] = "Failed to process deposit";
+    header("Location: deposit.php");
+    exit();
+}
+?&gt;</pre>
+                </div>
+                <div class="snippet-desc">
+                    <strong>PHP Backend:</strong> Handles deposit validation, daily limits, balance update, transaction logging, and notification creation.
+                </div>
+            </div>
+
+            <!-- ==========================================
+            SNIPPET 3: CSS - Mobile Styles
+            ========================================== -->
+            <div class="snippet-card">
+                <div class="snippet-header">
+                    <span class="title"><i class="fab fa-css3-alt"></i> Mobile Styles</span>
+                    <div>
+                        <span class="badge css">CSS</span>
+                        <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                    </div>
+                </div>
+                <div class="snippet-body">
+                    <pre id="code3">/* ============================================
+   MOBILE-FIRST STYLES
+   ============================================ */
+
+:root {
+  --primary: #1a237e;
+  --secondary: #667eea;
+  --accent: #764ba2;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  --nav-height: 72px;
+  --safe-bottom: env(safe-area-inset-bottom, 20px);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+/* ============================================
+   BALANCE CARD
+   ============================================ */
+.balance-card {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  border-radius: var(--radius-lg);
+  padding: 24px 22px;
+  color: white;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(26, 35, 126, 0.3);
+}
+
+.balance-card .amount {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin: 4px 0 14px;
+}
+
+.balance-card .amount .currency {
+  font-size: 22px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+/* ============================================
+   DAILY SPENDING
+   ============================================ */
+.daily-spending {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  backdrop-filter: blur(4px);
+}
+
+.daily-spending .progress {
+  height: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.daily-spending .progress .fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+  background: var(--success);
+}
+
+.daily-spending .progress .fill.warning {
+  background: var(--warning);
+}
+
+.daily-spending .progress .fill.danger {
+  background: var(--danger);
+}
+
+/* ============================================
+   ACTION GRID
+   ============================================ */
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.action-grid .action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 4px;
+  background: white;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.action-grid .action-item:active {
+  transform: scale(0.92);
+}
+
+.action-grid .action-item .action-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+}
+
+.action-icon.green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+.action-icon.red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+.action-icon.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+.action-icon.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+.action-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+/* ============================================
+   BOTTOM NAVIGATION
+   ============================================ */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid var(--gray-200);
+  padding: 8px 16px calc(8px + var(--safe-bottom));
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 500;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.bottom-nav .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.bottom-nav .nav-item .nav-icon {
+  font-size: 22px;
+  color: var(--gray-400);
+  transition: all 0.2s;
+}
+
+.bottom-nav .nav-item.active .nav-icon {
+  color: var(--secondary);
+}
+
+.bottom-nav .nav-item.center-btn {
+  margin-top: -20px;
+}
+
+.bottom-nav .nav-item.center-btn .nav-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--secondary), var(--accent));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+}
+
+/* ============================================
+   BOTTOM SHEET
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  display: flex;
+  animation: fadeIn 0.25s ease;
+}
+
+.bottom-sheet {
+  background: white;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  padding: 20px 24px 30px;
+  animation: slideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.bottom-sheet .sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--gray-300);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 480px) {
+  .action-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .balance-card .amount {
+    font-size: 30px;
+  }
+}</pre>
+                </div>
+                <div class="snippet-desc">
+                    <strong>CSS:</strong> Mobile-first styles including balance card, daily spending, action grid, bottom navigation, and bottom sheet animations.
+                </div>
+            </div>
+
+            <!-- ==========================================
+            SNIPPET 4: JavaScript - Bottom Sheet
+            ========================================== -->
+            <div class="snippet-card">
+                <div class="snippet-header">
+                    <span class="title"><i class="fab fa-js"></i> Bottom Sheet Controller</span>
+                    <div>
+                        <span class="badge js">JavaScript</span>
+                        <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                    </div>
+                </div>
+                <div class="snippet-body">
+                    <pre id="code4">// ============================================
+// BOTTOM SHEET CONTROLLER
+// ============================================
+
+const SheetController = {
+  // State
+  isOpen: false,
+  currentType: '',
+  overlay: null,
+  sheet: null,
+
+  // Initialize
+  init() {
+    this.overlay = document.querySelector('.modal-overlay');
+    this.sheet = this.overlay?.querySelector('.bottom-sheet');
+    
+    // Close on overlay click
+    this.overlay?.addEventListener('click', (e) => {
+      if (e.target === this.overlay) this.close();
+    });
+
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.isOpen) this.close();
+    });
+
+    // Prevent body scroll when open
+    this.overlay?.addEventListener('transitionstart', () => {
+      document.body.style.overflow = this.isOpen ? 'hidden' : '';
+    });
+  },
+
+  // Open sheet with type
+  open(type, data = {}) {
+    this.currentType = type;
+    this.isOpen = true;
+    
+    // Set content based on type
+    this.setContent(type, data);
+    
+    this.overlay?.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  },
+
+  // Close sheet
+  close() {
+    this.isOpen = false;
+    this.overlay?.classList.remove('active');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      this.currentType = '';
+    }, 300);
+  },
+
+  // Set content dynamically
+  setContent(type, data) {
+    const content = this.sheet?.querySelector('.sheet-content');
+    if (!content) return;
+
+    const templates = {
+      deposit: `
+        &lt;div class="sheet-title"&gt;💰 Deposit Funds&lt;/div&gt;
+        &lt;div class="form-group"&gt;
+          &lt;label&gt;Amount (£)&lt;/label&gt;
+          &lt;input type="number" step="0.01" id="amount" placeholder="0.00"&gt;
+        &lt;/div&gt;
+        &lt;div class="form-group"&gt;
+          &lt;label&gt;Description&lt;/label&gt;
+          &lt;input type="text" id="description" placeholder="e.g., Bank transfer"&gt;
+        &lt;/div&gt;
+        &lt;button class="btn-primary" onclick="handleDeposit()"&gt;
+          &lt;i class="fas fa-check-circle"&gt;&lt;/i&gt; Confirm Deposit
+        &lt;/button&gt;
+        &lt;button class="btn-secondary" onclick="SheetController.close()"&gt;Cancel&lt;/button&gt;
+      `,
+      withdraw: `
+        &lt;div class="sheet-title"&gt;🏦 Withdraw Funds&lt;/div&gt;
+        &lt;div class="form-group"&gt;
+          &lt;label&gt;Amount (£)&lt;/label&gt;
+          &lt;input type="number" step="0.01" id="amount" placeholder="0.00"&gt;
+        &lt;/div&gt;
+        &lt;div class="form-group"&gt;
+          &lt;label&gt;Description&lt;/label&gt;
+          &lt;input type="text" id="description" placeholder="e.g., ATM withdrawal"&gt;
+        &lt;/div&gt;
+        &lt;button class="btn-primary" onclick="handleWithdraw()"&gt;
+          &lt;i class="fas fa-check-circle"&gt;&lt;/i&gt; Confirm Withdrawal
+        &lt;/button&gt;
+        &lt;button class="btn-secondary" onclick="SheetController.close()"&gt;Cancel&lt;/button&gt;
+      `,
+      savings: `
+        &lt;div class="sheet-title"&gt;🐷 Create Savings Goal&lt;/div&gt;
+        &lt;div class="form-group"&gt;
+          &lt;label&gt;Goal Name&lt;/label&gt;
+          &lt;input type="text" id="goalName" placeholder="e.g., New Laptop"&gt;
+        &lt;/div&gt;
+        &lt;div class="form-row"&gt;
+          &lt;div class="form-group"&gt;
+            &lt;label&gt;Target (£)&lt;/label&gt;
+            &lt;input type="number" step="0.01" id="goalTarget" placeholder="500"&gt;
+          &lt;/div&gt;
+          &lt;div class="form-group"&gt;
+            &lt;label&gt;Deadline&lt;/label&gt;
+            &lt;input type="date" id="goalDeadline"&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;button class="btn-primary" onclick="handleCreateGoal()"&gt;
+          &lt;i class="fas fa-save"&gt;&lt;/i&gt; Create Goal
+        &lt;/button&gt;
+        &lt;button class="btn-secondary" onclick="SheetController.close()"&gt;Cancel&lt;/button&gt;
+      `
+    };
+
+    content.innerHTML = templates[type] || '&lt;p&gt;Unknown action&lt;/p&gt;';
+  }
+};
+
+// ============================================
+// HANDLER FUNCTIONS
+// ============================================
+
+function handleDeposit() {
+  const amount = document.getElementById('amount')?.value;
+  const description = document.getElementById('description')?.value;
+  
+  if (!amount || parseFloat(amount) <= 0) {
+    showToast('Please enter a valid amount', 'error');
+    return;
+  }
+
+  // Process deposit
+  console.log('Deposit:', { amount, description });
+  showToast(`Deposit of £${parseFloat(amount).toFixed(2)} completed!`, 'success');
+  SheetController.close();
+}
+
+function handleWithdraw() {
+  const amount = document.getElementById('amount')?.value;
+  const description = document.getElementById('description')?.value;
+  
+  if (!amount || parseFloat(amount) <= 0) {
+    showToast('Please enter a valid amount', 'error');
+    return;
+  }
+
+  console.log('Withdraw:', { amount, description });
+  showToast(`Withdrawal of £${parseFloat(amount).toFixed(2)} completed!`, 'success');
+  SheetController.close();
+}
+
+function handleCreateGoal() {
+  const name = document.getElementById('goalName')?.value;
+  const target = document.getElementById('goalTarget')?.value;
+  
+  if (!name || !target || parseFloat(target) <= 0) {
+    showToast('Please fill in all fields correctly', 'error');
+    return;
+  }
+
+  console.log('Goal created:', { name, target });
+  showToast(`Goal "${name}" created!`, 'success');
+  SheetController.close();
+}
+
+// ============================================
+// TOAST NOTIFICATION
+// ============================================
+
+function showToast(message, type = 'success') {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.className = 'toast ' + type;
+  toast.style.display = 'flex';
+
+  setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3500);
+}
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  SheetController.init();
+});
+
+// Global exposure
+window.SheetController = SheetController;
+window.showToast = showToast;</pre>
+                </div>
+                <div class="snippet-desc">
+                    <strong>JavaScript:</strong> Bottom sheet controller with dynamic content loading, form handling, toast notifications, and keyboard shortcuts.
+                </div>
+            </div>
+
+            <!-- ==========================================
+            SNIPPET 5: SQL - Database Schema
+            ========================================== -->
+            <div class="snippet-card">
+                <div class="snippet-header">
+                    <span class="title"><i class="fas fa-database"></i> Database Schema</span>
+                    <div>
+                        <span class="badge sql">SQL</span>
+                        <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                    </div>
+                </div>
+                <div class="snippet-body">
+                    <pre id="code5">-- ============================================
+-- STUDENT WALLET DATABASE SCHEMA
+-- ============================================
+
+-- Students table
+CREATE TABLE students (
+    student_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_number VARCHAR(20) UNIQUE NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    course VARCHAR(100),
+    year_of_study INT DEFAULT 1,
+    balance DECIMAL(12,2) DEFAULT 0.00,
+    daily_spending_limit DECIMAL(10,2) DEFAULT 50.00,
+    is_active BOOLEAN DEFAULT TRUE,
+    default_password BOOLEAN DEFAULT TRUE,
+    last_login DATETIME,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Transactions table
+CREATE TABLE transactions (
+    transaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    transaction_type ENUM('deposit', 'withdrawal', 'payment', 'transfer', 'refund') NOT NULL,
+    amount DECIMAL(12,2) NOT NULL,
+    description VARCHAR(255),
+    category VARCHAR(50),
+    reference_number VARCHAR(50) UNIQUE,
+    status ENUM('pending', 'completed', 'failed', 'cancelled') DEFAULT 'pending',
+    notes TEXT,
+    payment_method VARCHAR(50),
+    transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    INDEX idx_student_date (student_id, transaction_date)
+);
+
+-- Savings Goals
+CREATE TABLE savings_goals (
+    goal_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    goal_name VARCHAR(100) NOT NULL,
+    target_amount DECIMAL(12,2) NOT NULL,
+    current_amount DECIMAL(12,2) DEFAULT 0.00,
+    deadline DATE,
+    status ENUM('active', 'completed', 'cancelled') DEFAULT 'active',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE
+);
+
+-- Budget Categories
+CREATE TABLE budget_categories (
+    budget_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    category_name VARCHAR(50) NOT NULL,
+    monthly_budget DECIMAL(10,2) NOT NULL,
+    spent_amount DECIMAL(10,2) DEFAULT 0.00,
+    month INT NOT NULL,
+    year INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    UNIQUE KEY uk_student_category_month (student_id, category_name, month, year)
+);
+
+-- Recurring Transactions
+CREATE TABLE recurring_transactions (
+    recurring_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    amount DECIMAL(12,2) NOT NULL,
+    frequency ENUM('daily', 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly') NOT NULL,
+    type ENUM('deposit', 'payment', 'transfer') NOT NULL,
+    category VARCHAR(50),
+    description TEXT,
+    start_date DATE NOT NULL,
+    next_date DATE NOT NULL,
+    status ENUM('active', 'paused', 'completed', 'cancelled') DEFAULT 'active',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE
+);
+
+-- Emergency Fund
+CREATE TABLE emergency_funds (
+    fund_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL UNIQUE,
+    target_amount DECIMAL(10,2) DEFAULT 500.00,
+    current_amount DECIMAL(10,2) DEFAULT 0.00,
+    last_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE
+);
+
+-- Notifications
+CREATE TABLE notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    message TEXT NOT NULL,
+    type ENUM('success', 'warning', 'info', 'error') DEFAULT 'info',
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,
+    INDEX idx_student_read (student_id, is_read)
+);
+
+-- ============================================
+-- SAMPLE DATA
+-- ============================================
+
+INSERT INTO students (student_number, full_name, email, password, course, year_of_study) VALUES
+('WLV2024001', 'John Smith', 'john.smith@wlv.ac.uk', MD5('student123'), 'Computer Science', 2),
+('WLV2024002', 'Emma Johnson', 'emma.j@wlv.ac.uk', MD5('student123'), 'Business Management', 1);
+
+INSERT INTO savings_goals (student_id, goal_name, target_amount, current_amount, deadline) VALUES
+(1, 'New Laptop', 1000.00, 750.00, '2024-12-15'),
+(1, 'Spring Break Trip', 600.00, 320.00, '2025-03-20');
+
+INSERT INTO budget_categories (student_id, category_name, monthly_budget, spent_amount, month, year) VALUES
+(1, 'Food & Dining', 400.00, 215.00, 11, 2024),
+(1, 'Transport', 150.00, 85.00, 11, 2024);</pre>
+                </div>
+                <div class="snippet-desc">
+                    <strong>SQL:</strong> Complete database schema including students, transactions, savings goals, budget categories, recurring transactions, emergency funds, and notifications.
+                </div>
+            </div>
+
+            <!-- ==========================================
+            SNIPPET 6: PHP - API Endpoint
+            ========================================== -->
+            <div class="snippet-card">
+                <div class="snippet-header">
+                    <span class="title"><i class="fas fa-code"></i> API Endpoint</span>
+                    <div>
+                        <span class="badge php">PHP</span>
+                        <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                    </div>
+                </div>
+                <div class="snippet-body">
+                    <pre id="code6">&lt;?php
+// api.php - REST API Endpoint
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+session_start();
+include('config.php');
+
+// Authentication check
+function authenticate() {
+    if (!isset($_SESSION['student_id'])) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Unauthorized']);
+        exit();
+    }
+    return $_SESSION['student_id'];
+}
+
+// Get request method and endpoint
+$method = $_SERVER['REQUEST_METHOD'];
+$endpoint = $_GET['endpoint'] ?? '';
+
+// Route handling
+switch ($endpoint) {
+    case 'balance':
+        if ($method === 'GET') {
+            $student_id = authenticate();
+            $query = "SELECT balance FROM students WHERE student_id = '$student_id'";
+            $result = mysqli_query($conn, $query);
+            $row = mysqli_fetch_assoc($result);
+            echo json_encode(['balance' => floatval($row['balance'])]);
+        }
+        break;
+
+    case 'transactions':
+        if ($method === 'GET') {
+            $student_id = authenticate();
+            $limit = intval($_GET['limit'] ?? 10);
+            $query = "SELECT * FROM transactions 
+                      WHERE student_id = '$student_id' 
+                      ORDER BY transaction_date DESC LIMIT $limit";
+            $result = mysqli_query($conn, $query);
+            $transactions = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $transactions[] = $row;
+            }
+            echo json_encode($transactions);
+        }
+        break;
+
+    case 'deposit':
+        if ($method === 'POST') {
+            $student_id = authenticate();
+            $data = json_decode(file_get_contents('php://input'), true);
+            
+            $amount = floatval($data['amount'] ?? 0);
+            $description = mysqli_real_escape_string($conn, $data['description'] ?? '');
+            $category = mysqli_real_escape_string($conn, $data['category'] ?? 'deposit');
+            
+            if ($amount <= 0) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid amount']);
+                break;
+            }
+            
+            // Get current balance
+            $balance_query = "SELECT balance FROM students WHERE student_id = '$student_id'";
+            $balance_result = mysqli_query($conn, $balance_query);
+            $current = mysqli_fetch_assoc($balance_result)['balance'];
+            $new_balance = $current + $amount;
+            
+            // Update balance
+            $update = "UPDATE students SET balance = '$new_balance' WHERE student_id = '$student_id'";
+            if (mysqli_query($conn, $update)) {
+                $reference = 'DEP' . date('Ymd') . rand(1000, 9999);
+                $insert = "INSERT INTO transactions 
+                           (student_id, transaction_type, amount, description, category, reference_number, status) 
+                           VALUES ('$student_id', 'deposit', '$amount', '$description', '$category', '$reference', 'completed')";
+                mysqli_query($conn, $insert);
+                
+                echo json_encode([
+                    'success' => true,
+                    'new_balance' => $new_balance,
+                    'reference' => $reference
+                ]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['error' => 'Database error']);
+            }
+        }
+        break;
+
+    case 'goals':
+        if ($method === 'GET') {
+            $student_id = authenticate();
+            $query = "SELECT * FROM savings_goals 
+                      WHERE student_id = '$student_id' AND status = 'active'";
+            $result = mysqli_query($conn, $query);
+            $goals = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $goals[] = $row;
+            }
+            echo json_encode($goals);
+        } elseif ($method === 'POST') {
+            $student_id = authenticate();
+            $data = json_decode(file_get_contents('php://input'), true);
+            
+            $name = mysqli_real_escape_string($conn, $data['name'] ?? '');
+            $target = floatval($data['target'] ?? 0);
+            $deadline = mysqli_real_escape_string($conn, $data['deadline'] ?? null);
+            
+            if (!$name || $target <= 0) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid goal data']);
+                break;
+            }
+            
+            $insert = "INSERT INTO savings_goals (student_id, goal_name, target_amount, deadline) 
+                       VALUES ('$student_id', '$name', '$target', '$deadline')";
+            if (mysqli_query($conn, $insert)) {
+                echo json_encode(['success' => true, 'goal_id' => mysqli_insert_id($conn)]);
+            } else {
+                http_response_code(500);
+                echo json_encode(['error' => 'Database error']);
+            }
+        }
+        break;
+
+    case 'budget':
+        if ($method === 'GET') {
+            $student_id = authenticate();
+            $month = date('n');
+            $year = date('Y');
+            $query = "SELECT * FROM budget_categories 
+                      WHERE student_id = '$student_id' AND month = $month AND year = $year";
+            $result = mysqli_query($conn, $query);
+            $budgets = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $budgets[] = $row;
+            }
+            echo json_encode($budgets);
+        }
+        break;
+
+    case 'notifications':
+        if ($method === 'GET') {
+            $student_id = authenticate();
+            $query = "SELECT * FROM notifications 
+                      WHERE student_id = '$student_id' AND is_read = 0 
+                      ORDER BY created_at DESC LIMIT 10";
+            $result = mysqli_query($conn, $query);
+            $notifications = [];
+            while ($row = mysqli_fetch_assoc($result)) {
+                $notifications[] = $row;
+            }
+            echo json_encode($notifications);
+        } elseif ($method === 'PUT') {
+            $student_id = authenticate();
+            $update = "UPDATE notifications SET is_read = 1 
+                       WHERE student_id = '$student_id'";
+            mysqli_query($conn, $update);
+            echo json_encode(['success' => true]);
+        }
+        break;
+
+    default:
+        http_response_code(404);
+        echo json_encode(['error' => 'Endpoint not found']);
+}
+?&gt;</pre>
+                </div>
+                <div class="snippet-desc">
+                    <strong>PHP API:</strong> RESTful API endpoints for balance, transactions, deposits, savings goals, budgets, and notifications with authentication.
+                </div>
+            </div>
+
+            <!-- ==========================================
+            SNIPPET 7: Vue - Savings Goal Component
+            ========================================== -->
+            <div class="snippet-card">
+                <div class="snippet-header">
+                    <span class="title"><i class="fab fa-vuejs"></i> Savings Goals Component</span>
+                    <div>
+                        <span class="badge vue">Vue</span>
+                        <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                    </div>
+                </div>
+                <div class="snippet-body">
+                    <pre id="code7">&lt;template&gt;
+  &lt;div class="savings-section"&gt;
+    &lt;div class="section-header"&gt;
+      &lt;h3&gt;&lt;i class="fas fa-piggy-bank"&gt;&lt;/i&gt; Savings Goals&lt;/h3&gt;
+      &lt;button class="btn-add" @click="openCreateGoal"&gt;
+        &lt;i class="fas fa-plus"&gt;&lt;/i&gt; New Goal
+      &lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div v-if="loading" class="loading"&gt;Loading...&lt;/div&gt;
+
+    &lt;div v-else-if="goals.length === 0" class="empty-state"&gt;
+      &lt;i class="fas fa-piggy-bank"&gt;&lt;/i&gt;
+      &lt;p&gt;No savings goals yet. Start saving today!&lt;/p&gt;
+    &lt;/div&gt;
+
+    &lt;div v-else class="goals-grid"&gt;
+      &lt;div v-for="goal in goals" :key="goal.goal_id" class="goal-card"&gt;
+        &lt;div class="goal-header"&gt;
+          &lt;h4&gt;{{ goal.goal_name }}&lt;/h4&gt;
+          &lt;span class="goal-status" :class="goal.status"&gt;
+            {{ goal.status }}
+          &lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div class="goal-amounts"&gt;
+          &lt;span&gt;Saved: £{{ formatCurrency(goal.current_amount) }}&lt;/span&gt;
+          &lt;span&gt;Target: £{{ formatCurrency(goal.target_amount) }}&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div class="progress"&gt;
+          &lt;div class="fill" :style="{ width: progressPercent(goal) + '%' }"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="goal-progress-text"&gt;
+          {{ progressPercent(goal) }}% Complete
+        &lt;/div&gt;
+
+        &lt;div class="goal-deadline" v-if="goal.deadline"&gt;
+          &lt;i class="fas fa-calendar-alt"&gt;&lt;/i&gt;
+          Deadline: {{ formatDate(goal.deadline) }}
+        &lt;/div&gt;
+
+        &lt;div class="goal-actions"&gt;
+          &lt;button class="btn-add-funds" @click="addFunds(goal)"&gt;
+            &lt;i class="fas fa-plus"&gt;&lt;/i&gt; Add Funds
+          &lt;/button&gt;
+          &lt;button v-if="goal.status === 'active'" 
+                  class="btn-complete" 
+                  @click="completeGoal(goal)"&gt;
+            &lt;i class="fas fa-check"&gt;&lt;/i&gt; Complete
+          &lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      goals: [],
+      loading: false,
+    };
+  },
+  mounted() {
+    this.fetchGoals();
+  },
+  methods: {
+    async fetchGoals() {
+      this.loading = true;
+      try {
+        const response = await axios.get('/api.php?endpoint=goals');
+        this.goals = response.data;
+      } catch (error) {
+        console.error('Failed to fetch goals:', error);
+        this.$emit('show-toast', 'Failed to load goals', 'error');
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async addFunds(goal) {
+      const amount = prompt('Enter amount to add (£):');
+      if (!amount || isNaN(amount) || parseFloat(amount) <= 0) return;
+
+      try {
+        const response = await axios.post('/api.php?endpoint=goal-add', {
+          goal_id: goal.goal_id,
+          amount: parseFloat(amount)
+        });
+
+        if (response.data.success) {
+          goal.current_amount = response.data.new_amount;
+          this.$emit('show-toast', `Added £${parseFloat(amount).toFixed(2)} to "${goal.goal_name}"`, 'success');
+          // Update balance
+          this.$emit('balance-updated', response.data.new_balance);
+        }
+      } catch (error) {
+        this.$emit('show-toast', 'Failed to add funds', 'error');
+      }
+    },
+
+    async completeGoal(goal) {
+      if (!confirm(`Mark "${goal.goal_name}" as completed?`)) return;
+
+      try {
+        const response = await axios.put('/api.php?endpoint=goal-complete', {
+          goal_id: goal.goal_id
+        });
+
+        if (response.data.success) {
+          goal.status = 'completed';
+          this.$emit('show-toast', `🎉 "${goal.goal_name}" completed!`, 'success');
+        }
+      } catch (error) {
+        this.$emit('show-toast', 'Failed to complete goal', 'error');
+      }
+    },
+
+    progressPercent(goal) {
+      return Math.min((goal.current_amount / goal.target_amount) * 100, 100);
+    },
+
+    formatCurrency(value) {
+      return Number(value).toFixed(2);
+    },
+
+    formatDate(date) {
+      return new Date(date).toLocaleDateString('en-GB');
+    },
+
+    openCreateGoal() {
+      this.$emit('open-sheet', 'savings');
+    }
+  }
+};
+&lt;/script&gt;</pre>
+                </div>
+                <div class="snippet-desc">
+                    <strong>Vue Component:</strong> Complete savings goals component with API integration, progress tracking, add funds, and complete functionality.
+                </div>
+            </div>
+
+            <!-- ==========================================
+            SNIPPET 8: Service Worker - PWA
+            ========================================== -->
+            <div class="snippet-card">
+                <div class="snippet-header">
+                    <span class="title"><i class="fas fa-box"></i> PWA Service Worker</span>
+                    <div>
+                        <span class="badge js">JS</span>
+                        <button class="copy-btn" onclick="copyCode(this)">📋 Copy</button>
+                    </div>
+                </div>
+                <div class="snippet-body">
+                    <pre id="code8">// ============================================
+// SERVICE WORKER - PWA OFFLINE SUPPORT
+// ============================================
+
+const CACHE_NAME = 'student-wallet-v2';
+const ASSETS = [
+  '/',
+  '/index.html',
+  '/style.css',
+  '/app.js',
+  '/manifest.json',
+  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+  'https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.min.js'
+];
+
+// Install event - cache assets
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Caching assets...');
+        return cache.addAll(ASSETS);
+      })
+      .then(() => self.skipWaiting())
+  );
+});
+
+// Activate event - clean old caches
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
+  );
+});
+
+// Fetch event - serve from cache or network
+self.addEventListener('fetch', (event) => {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+  // Skip API requests
+  if (event.request.url.includes('/api.php')) {
+    return;
+  }
+
+  event.respondWith(
+    caches.match(event.request)
+      .then((cachedResponse) => {
+        // Return cached response if available
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
+        // Otherwise fetch from network
+        return fetch(event.request)
+          .then((response) => {
+            // Don't cache non-success responses
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // Cache the response for future
+            const responseToCache = response.clone();
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          })
+          .catch(() => {
+            // Offline fallback
+            return caches.match('/offline.html');
+          });
+      })
+  );
+});
+
+// ============================================
+// PUSH NOTIFICATIONS
+// ============================================
+
+self.addEventListener('push', (event) => {
+  let data = { title: 'Student Wallet', body: 'New notification' };
+  
+  if (event.data) {
+    try {
+      data = JSON.parse(event.data.text());
+    } catch {
+      data.body = event.data.text();
+    }
+  }
+
+  const options = {
+    body: data.body,
+    icon: '/icon-192.png',
+    badge: '/badge-72.png',
+    vibrate: [200, 100, 200],
+    data: data.url || '/',
+    actions: [
+      { action: 'open', title: 'Open' },
+      { action: 'dismiss', title: 'Dismiss' }
+    ]
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
+
+// Notification click handler
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  if (event.action === 'dismiss') {
+    return;
+  }
+
+  const url = event.notification.data || '/';
+  event.waitUntil(
+    clients.matchAll({ type: 'window' })
+      .then((clientList) => {
+        // Open existing window or create new
+        for (const client of clientList) {
+          if (client.url === url && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        if (clients.openWindow) {
+          return clients.openWindow(url);
+        }
+      })
+  );
+});</pre>
+                </div>
+                <div class="snippet-desc">
+                    <strong>Service Worker:</strong> PWA implementation with offline caching, push notifications, and asset management for mobile app experience.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ==========================================
+        FOOTER
+        ========================================== -->
+        <div style="text-align:center;padding:32px 0 8px;color:#64748b;font-size:13px;border-top:1px solid #1e293b;margin-top:16px;">
+            Student Wallet Code Snippets · University of Wolverhampton · v2.0
+            <br>
+            <span style="font-size:11px;">Click the copy button on any snippet to copy the code</span>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================
+        // COPY FUNCTIONALITY
+        // ============================================
+        function copyCode(btn) {
+            const card = btn.closest('.snippet-card');
+            const pre = card.querySelector('pre');
+            const code = pre.textContent;
+
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = code;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy';
+                }, 2000);
+            });
+        }
+
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            // Ctrl+Shift+C to copy all code
+            if (e.ctrlKey && e.shiftKey && e.key === 'C') {
+                const allCode = document.querySelectorAll('pre');
+                let fullText = '';
+                allCode.forEach(pre => {
+                    fullText += pre.textContent + '\n\n---\n\n';
+                });
+                navigator.clipboard.writeText(fullText).then(() => {
+                    alert('✅ All code snippets copied to clipboard!');
+                });
+            }
+        });
+
+        // ============================================
+        // CONSOLE LOG
+        // ============================================
+        console.log('📱 Student Wallet Code Snippets loaded!');
+        console.log('📋 Press Ctrl+Shift+C to copy all snippets');
+        console.log('🔢 Total snippets: 8');
+    </script>
+
+</body>
+</html>

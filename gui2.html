@@ -1,0 +1,2497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Student Wallet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ============================================
+           CSS VARIABLES & RESET
+        ============================================ */
+        :root {
+            --primary: #1a237e;
+            --primary-light: #283593;
+            --primary-dark: #0d1445;
+            --secondary: #667eea;
+            --accent: #764ba2;
+            --success: #22c55e;
+            --success-light: #dcfce7;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --info: #3b82f6;
+            --info-light: #dbeafe;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+            --shadow-xl: 0 16px 48px rgba(0,0,0,0.16);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-lg: 24px;
+            --safe-top: env(safe-area-inset-top, 20px);
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
+            --nav-height: 72px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 16px);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ============================================
+           APP CONTAINER
+        ============================================ */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 0 16px 20px;
+            position: relative;
+        }
+
+        /* ============================================
+           STATUS BAR (iOS style)
+        ============================================ */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 4px 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
+            letter-spacing: 0.3px;
+            background: var(--gray-50);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .status-bar .time {
+            font-weight: 700;
+            color: var(--gray-800);
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .status-icons i {
+            font-size: 14px;
+        }
+
+        /* ============================================
+           HEADER
+        ============================================ */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0 16px;
+        }
+
+        .app-header .greeting {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header .greeting .hello {
+            font-size: 13px;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .app-header .greeting .name {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--gray-900);
+            letter-spacing: -0.5px;
+        }
+
+        .app-header .greeting .name span {
+            color: var(--secondary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-actions .icon-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: none;
+            background: white;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .header-actions .icon-btn:active {
+            transform: scale(0.92);
+        }
+
+        .header-actions .icon-btn .badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .header-actions .avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        /* ============================================
+           NOTIFICATION SHEET
+        ============================================ */
+        .notification-sheet {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-xl);
+            overflow-y: auto;
+            padding: 20px 20px 30px;
+        }
+
+        .notification-sheet.open {
+            transform: translateX(0);
+        }
+
+        .notification-sheet .sheet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 16px;
+        }
+
+        .notification-sheet .sheet-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .notification-sheet .sheet-header button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .notification-sheet .notif-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .notification-sheet .notif-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-sheet .notif-item .notif-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .notification-sheet .notif-item .notif-icon.success {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .notification-sheet .notif-item .notif-icon.warning {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+        .notification-sheet .notif-item .notif-icon.info {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .notification-sheet .notif-item .notif-content {
+            flex: 1;
+        }
+
+        .notification-sheet .notif-item .notif-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .notification-sheet .notif-item .notif-content p {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .notification-sheet .notif-item .notif-content .time {
+            font-size: 11px;
+            color: var(--gray-400);
+            margin-top: 4px;
+            display: block;
+        }
+
+        .notification-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .notification-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ============================================
+           BALANCE CARD
+        ============================================ */
+        .balance-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: var(--radius-lg);
+            padding: 24px 22px;
+            color: white;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(26, 35, 126, 0.3);
+        }
+
+        .balance-card::before {
+            content: '● ● ● ●';
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            font-size: 10px;
+            letter-spacing: 6px;
+            opacity: 0.2;
+            color: white;
+            font-weight: 300;
+        }
+
+        .balance-card::after {
+            content: '';
+            position: absolute;
+            top: -60%;
+            right: -30%;
+            width: 250px;
+            height: 250px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+        }
+
+        .balance-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .balance-card .label {
+            font-size: 13px;
+            font-weight: 500;
+            opacity: 0.8;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .balance-card .amount {
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 4px 0 14px;
+        }
+
+        .balance-card .amount .currency {
+            font-size: 22px;
+            font-weight: 600;
+            opacity: 0.7;
+            margin-right: 2px;
+        }
+
+        .balance-card .row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .balance-card .row span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .balance-card .row i {
+            font-size: 13px;
+            opacity: 0.7;
+        }
+
+        /* Daily spending inside balance card */
+        .daily-spending {
+            margin-top: 16px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            backdrop-filter: blur(4px);
+        }
+
+        .daily-spending .ds-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .daily-spending .ds-header .ds-amount {
+            font-weight: 700;
+        }
+
+        .daily-spending .progress {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .daily-spending .progress .fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+            background: var(--success);
+        }
+
+        .daily-spending .progress .fill.warning {
+            background: var(--warning);
+        }
+        .daily-spending .progress .fill.danger {
+            background: var(--danger);
+        }
+
+        .daily-spending .ds-limit {
+            font-size: 11px;
+            opacity: 0.6;
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        /* ============================================
+           QUICK STATS ROW
+        ============================================ */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quick-stats .stat-item {
+            background: white;
+            padding: 14px 10px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+        }
+
+        .quick-stats .stat-item:active {
+            transform: scale(0.95);
+        }
+
+        .quick-stats .stat-item .stat-icon {
+            font-size: 18px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .quick-stats .stat-item .stat-icon.blue {
+            color: var(--secondary);
+        }
+        .quick-stats .stat-item .stat-icon.green {
+            color: var(--success);
+        }
+        .quick-stats .stat-item .stat-icon.purple {
+            color: var(--accent);
+        }
+        .quick-stats .stat-item .stat-icon.orange {
+            color: var(--warning);
+        }
+
+        .quick-stats .stat-item .stat-number {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--gray-900);
+            line-height: 1.2;
+        }
+
+        .quick-stats .stat-item .stat-label {
+            font-size: 11px;
+            color: var(--gray-500);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* ============================================
+           ACTION GRID
+        ============================================ */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .action-grid .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 4px;
+            background: white;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .action-grid .action-item:active {
+            transform: scale(0.92);
+        }
+
+        .action-grid .action-item .action-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            transition: all 0.2s;
+        }
+
+        .action-grid .action-item .action-icon.green {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+        .action-grid .action-item .action-icon.red {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        .action-grid .action-item .action-icon.purple {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+        .action-grid .action-item .action-icon.blue {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        .action-grid .action-item .action-icon.orange {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .action-grid .action-item .action-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--gray-600);
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* ============================================
+           SECTION CARDS
+        ============================================ */
+        .section-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 18px 16px 20px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 16px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .section-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header h3 i {
+            color: var(--secondary);
+            font-size: 16px;
+        }
+
+        .section-header .see-all {
+            font-size: 13px;
+            color: var(--secondary);
+            font-weight: 600;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 50px;
+            transition: all 0.2s;
+        }
+
+        .section-header .see-all:active {
+            background: var(--gray-100);
+        }
+
+        /* ============================================
+           GOALS LIST
+        ============================================ */
+        .goals-list .goal-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .goals-list .goal-item:last-child {
+            border-bottom: none;
+        }
+
+        .goal-item .goal-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .goal-item .goal-top .goal-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--gray-800);
+        }
+
+        .goal-item .goal-top .goal-amount {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .goal-item .goal-progress {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 2px;
+        }
+
+        .goal-item .progress {
+            height: 4px;
+            background: var(--gray-200);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .goal-item .progress .fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            transition: width 0.6s ease;
+        }
+
+        .goal-item .goal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .goal-item .goal-actions button {
+            padding: 4px 14px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .goal-item .goal-actions button:active {
+            transform: scale(0.95);
+        }
+
+        .goal-item .goal-actions .btn-add {
+            background: var(--success);
+            color: white;
+        }
+
+        .goal-item .goal-actions .btn-complete {
+            background: var(--gray-200);
+            color: var(--gray-600);
+        }
+
+        .goal-item .goal-actions .btn-complete.done {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        /* ============================================
+           BUDGET ITEMS
+        ============================================ */
+        .budget-items .budget-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .budget-items .budget-item:last-child {
+            border-bottom: none;
+        }
+
+        .budget-item .budget-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .budget-item .budget-info .budget-name {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .budget-item .budget-info .budget-amount {
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .budget-item .progress {
+            height: 4px;
+            background: var(--gray-200);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .budget-item .progress .fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.6s ease;
+        }
+
+        .budget-item .progress .fill.success {
+            background: var(--success);
+        }
+        .budget-item .progress .fill.warning {
+            background: var(--warning);
+        }
+        .budget-item .progress .fill.danger {
+            background: var(--danger);
+        }
+
+        /* ============================================
+           RECURRING ITEMS
+        ============================================ */
+        .recurring-items .rec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .recurring-items .rec-item:last-child {
+            border-bottom: none;
+        }
+
+        .rec-item .rec-left {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rec-item .rec-left .rec-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--gray-800);
+        }
+
+        .rec-item .rec-left .rec-details {
+            font-size: 12px;
+            color: var(--gray-500);
+            display: flex;
+            gap: 12px;
+            margin-top: 2px;
+        }
+
+        .rec-item .rec-left .rec-details span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rec-item .rec-right {
+            text-align: right;
+        }
+
+        .rec-item .rec-right .rec-amount {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .rec-item .rec-right .rec-amount.income {
+            color: var(--success);
+        }
+        .rec-item .rec-right .rec-amount.expense {
+            color: var(--danger);
+        }
+
+        .rec-item .rec-right .rec-status {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 2px;
+        }
+
+        .rec-item .rec-right .rec-status.active {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .rec-item .rec-right .rec-status.paused {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        /* ============================================
+           EMERGENCY FUND CARD
+        ============================================ */
+        .emergency-card {
+            background: linear-gradient(135deg, #dc2626, #f59e0b);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .emergency-card::before {
+            content: '🛡️';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 48px;
+            opacity: 0.15;
+        }
+
+        .emergency-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .emergency-card .em-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .emergency-card .em-header .em-status {
+            font-size: 12px;
+            padding: 2px 14px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .emergency-card .em-amounts {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 6px 0 10px;
+        }
+
+        .emergency-card .em-amounts span:last-child {
+            opacity: 0.8;
+        }
+
+        .emergency-card .progress {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .emergency-card .progress .fill {
+            height: 100%;
+            border-radius: 2px;
+            background: #ffd700;
+            transition: width 0.6s ease;
+        }
+
+        .emergency-card .em-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .emergency-card .em-actions button {
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(4px);
+        }
+
+        .emergency-card .em-actions button:active {
+            transform: scale(0.95);
+        }
+
+        /* ============================================
+           TRANSACTION LIST
+        ============================================ */
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-item .tx-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .transaction-item .tx-icon.deposit {
+            background: var(--success-light);
+            color: var(--success);
+        }
+        .transaction-item .tx-icon.withdrawal {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+        .transaction-item .tx-icon.payment {
+            background: #ede9fe;
+            color: var(--accent);
+        }
+        .transaction-item .tx-icon.transfer {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .transaction-item .tx-info {
+            flex: 1;
+        }
+
+        .transaction-item .tx-info .tx-desc {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--gray-800);
+        }
+
+        .transaction-item .tx-info .tx-meta {
+            font-size: 12px;
+            color: var(--gray-500);
+            display: flex;
+            gap: 12px;
+            margin-top: 2px;
+        }
+
+        .transaction-item .tx-info .tx-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .transaction-item .tx-amount {
+            font-weight: 700;
+            font-size: 15px;
+            text-align: right;
+        }
+
+        .transaction-item .tx-amount.positive {
+            color: var(--success);
+        }
+        .transaction-item .tx-amount.negative {
+            color: var(--danger);
+        }
+
+        .transaction-item .tx-amount .tx-status {
+            display: block;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--gray-400);
+        }
+
+        /* ============================================
+           BOTTOM NAVIGATION
+        ============================================ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            padding: 8px 16px calc(8px + var(--safe-bottom));
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 500;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .bottom-nav .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 4px 12px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            position: relative;
+            min-width: 48px;
+        }
+
+        .bottom-nav .nav-item .nav-icon {
+            font-size: 22px;
+            color: var(--gray-400);
+            transition: all 0.2s;
+        }
+
+        .bottom-nav .nav-item .nav-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--gray-400);
+            transition: all 0.2s;
+        }
+
+        .bottom-nav .nav-item.active .nav-icon {
+            color: var(--secondary);
+        }
+
+        .bottom-nav .nav-item.active .nav-label {
+            color: var(--secondary);
+        }
+
+        .bottom-nav .nav-item .nav-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--danger);
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .bottom-nav .nav-item.center-btn {
+            margin-top: -20px;
+        }
+
+        .bottom-nav .nav-item.center-btn .nav-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+            transition: all 0.2s;
+        }
+
+        .bottom-nav .nav-item.center-btn:active .nav-icon {
+            transform: scale(0.92);
+        }
+
+        /* ============================================
+           MODAL / BOTTOM SHEET
+        ============================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .bottom-sheet {
+            background: white;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            width: 100%;
+            max-width: 480px;
+            max-height: 85vh;
+            padding: 20px 24px 30px;
+            animation: slideUp 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .bottom-sheet .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--gray-300);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .bottom-sheet .sheet-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .bottom-sheet .sheet-title i {
+            color: var(--secondary);
+        }
+
+        .bottom-sheet .sheet-subtitle {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-bottom: 20px;
+        }
+
+        .bottom-sheet .form-group {
+            margin-bottom: 16px;
+        }
+
+        .bottom-sheet .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 4px;
+        }
+
+        .bottom-sheet .form-group input,
+        .bottom-sheet .form-group select,
+        .bottom-sheet .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-family: inherit;
+            background: var(--gray-50);
+            transition: all 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .bottom-sheet .form-group input:focus,
+        .bottom-sheet .form-group select:focus,
+        .bottom-sheet .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+            background: white;
+        }
+
+        .bottom-sheet .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .bottom-sheet .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .bottom-sheet .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 4px;
+        }
+
+        .bottom-sheet .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .bottom-sheet .btn-primary i {
+            margin-right: 8px;
+        }
+
+        .bottom-sheet .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .bottom-sheet .btn-secondary:active {
+            background: var(--gray-200);
+        }
+
+        .bottom-sheet .btn-danger {
+            width: 100%;
+            padding: 14px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 4px;
+        }
+
+        .bottom-sheet .btn-danger:active {
+            transform: scale(0.98);
+        }
+
+        .bottom-sheet .modal-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .bottom-sheet .form-hint {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 4px;
+        }
+
+        /* ============================================
+           FLOATING ACTION BUTTON
+        ============================================ */
+        .fab {
+            position: fixed;
+            bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: white;
+            border: none;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab:active {
+            transform: scale(0.9);
+        }
+
+        /* ============================================
+           TOAST
+        ============================================ */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 400px;
+            width: calc(100% - 32px);
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 14px;
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-lg);
+            animation: slideDownToast 0.35s ease;
+        }
+
+        @keyframes slideDownToast {
+            from {
+                transform: translateX(-50%) translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            background: var(--success);
+            color: white;
+        }
+        .toast.error {
+            background: var(--danger);
+            color: white;
+        }
+        .toast.info {
+            background: var(--info);
+            color: white;
+        }
+
+        .toast i {
+            font-size: 20px;
+        }
+
+        .toast .toast-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        /* ============================================
+           RESPONSIVE & UTILITY
+        ============================================ */
+        .text-muted {
+            color: var(--gray-500);
+        }
+        .mt-1 {
+            margin-top: 4px;
+        }
+        .mt-2 {
+            margin-top: 8px;
+        }
+        .mb-1 {
+            margin-bottom: 4px;
+        }
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+        .fw-bold {
+            font-weight: 700;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .gap-2 {
+            gap: 8px;
+        }
+        .gap-3 {
+            gap: 12px;
+        }
+
+        /* Scrollable sections */
+        .scroll-x {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .scroll-x::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        @media (max-width: 380px) {
+            .action-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .quick-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .balance-card .amount {
+                font-size: 30px;
+            }
+            .bottom-sheet .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 481px) {
+            body {
+                background: var(--gray-200);
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 20px 0 40px;
+            }
+            .app-container {
+                background: var(--gray-50);
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-xl);
+                padding: 0 20px 20px;
+                min-height: 90vh;
+                position: relative;
+            }
+            .status-bar {
+                border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+                padding: 12px 20px 8px;
+            }
+            .bottom-nav {
+                border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            }
+            .fab {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container" id="app">
+
+        <!-- ==========================================
+        STATUS BAR (iOS style)
+        ========================================== -->
+        <div class="status-bar">
+            <span class="time" id="statusTime">9:41</span>
+            <div class="status-icons">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-three-quarters"></i>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        HEADER
+        ========================================== -->
+        <header class="app-header">
+            <div class="greeting">
+                <span class="hello">Good {{ greetingTime }}</span>
+                <span class="name">John <span>Smith</span></span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" @click="toggleNotifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge" v-if="unreadCount > 0">{{ unreadCount }}</span>
+                </button>
+                <div class="avatar" @click="showProfile = true">JS</div>
+            </div>
+        </header>
+
+        <!-- ==========================================
+        NOTIFICATION SHEET
+        ========================================== -->
+        <div class="notification-overlay" :class="{ open: showNotifications }" @click="toggleNotifications"></div>
+        <div class="notification-sheet" :class="{ open: showNotifications }">
+            <div class="sheet-header">
+                <h3><i class="fas fa-bell" style="color:var(--secondary)"></i> Notifications</h3>
+                <button @click="toggleNotifications">&times;</button>
+            </div>
+            <div v-if="notifications.length === 0" class="text-center text-muted" style="padding:40px 0;">
+                <i class="fas fa-check-circle" style="font-size:32px;color:var(--success);display:block;margin-bottom:12px;"></i>
+                All caught up!
+            </div>
+            <div v-for="notif in notifications" :key="notif.id" class="notif-item">
+                <div class="notif-icon" :class="notif.type">
+                    <i :class="notif.icon"></i>
+                </div>
+                <div class="notif-content">
+                    <h4>{{ notif.title }}</h4>
+                    <p>{{ notif.message }}</p>
+                    <span class="time">{{ notif.time }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        BALANCE CARD
+        ========================================== -->
+        <div class="balance-card">
+            <div class="label">Available Balance</div>
+            <div class="amount">
+                <span class="currency">£</span>{{ formatCurrency(balance) }}
+            </div>
+            <div class="row">
+                <span><i class="fas fa-id-card"></i> {{ studentId }}</span>
+                <span><i class="fas fa-graduation-cap"></i> {{ course }}</span>
+                <span><i class="fas fa-calendar-alt"></i> Year {{ yearOfStudy }}</span>
+            </div>
+
+            <div class="daily-spending">
+                <div class="ds-header">
+                    <span><i class="fas fa-clock"></i> Today's Spending</span>
+                    <span class="ds-amount">£{{ formatCurrency(dailySpend) }}</span>
+                </div>
+                <div class="progress">
+                    <div class="fill" :class="dailyPercent > 90 ? 'danger' : dailyPercent > 70 ? 'warning' : ''" :style="{ width: dailyPercent + '%' }"></div>
+                </div>
+                <div class="ds-limit">Limit: £{{ formatCurrency(dailyLimit) }}</div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        QUICK STATS
+        ========================================== -->
+        <div class="quick-stats">
+            <div class="stat-item" @click="viewSection('transactions')">
+                <span class="stat-icon blue"><i class="fas fa-exchange-alt"></i></span>
+                <div class="stat-number">{{ totalTransactions }}</div>
+                <div class="stat-label">Transactions</div>
+            </div>
+            <div class="stat-item" @click="viewSection('savings')">
+                <span class="stat-icon green"><i class="fas fa-piggy-bank"></i></span>
+                <div class="stat-number">{{ activeGoals }}</div>
+                <div class="stat-label">Savings Goals</div>
+            </div>
+            <div class="stat-item" @click="viewSection('reports')">
+                <span class="stat-icon purple"><i class="fas fa-chart-line"></i></span>
+                <div class="stat-number">£{{ formatCurrency(monthlyIncome) }}</div>
+                <div class="stat-label">Monthly Income</div>
+            </div>
+            <div class="stat-item" @click="viewSection('notifications')">
+                <span class="stat-icon orange"><i class="fas fa-exclamation-triangle"></i></span>
+                <div class="stat-number">{{ unreadAlerts }}</div>
+                <div class="stat-label">Alerts</div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        ACTION GRID
+        ========================================== -->
+        <div class="action-grid">
+            <button class="action-item" @click="openSheet('deposit')">
+                <span class="action-icon green"><i class="fas fa-plus"></i></span>
+                <span class="action-label">Deposit</span>
+            </button>
+            <button class="action-item" @click="openSheet('withdraw')">
+                <span class="action-icon red"><i class="fas fa-minus"></i></span>
+                <span class="action-label">Withdraw</span>
+            </button>
+            <button class="action-item" @click="openSheet('payment')">
+                <span class="action-icon purple"><i class="fas fa-credit-card"></i></span>
+                <span class="action-label">Pay</span>
+            </button>
+            <button class="action-item" @click="openSheet('transfer')">
+                <span class="action-icon blue"><i class="fas fa-exchange-alt"></i></span>
+                <span class="action-label">Transfer</span>
+            </button>
+            <button class="action-item" @click="openSheet('savings')">
+                <span class="action-icon orange"><i class="fas fa-piggy-bank"></i></span>
+                <span class="action-label">Save</span>
+            </button>
+        </div>
+
+        <!-- ==========================================
+        SAVINGS GOALS
+        ========================================== -->
+        <div class="section-card" v-if="goals.length > 0">
+            <div class="section-header">
+                <h3><i class="fas fa-piggy-bank"></i> Savings Goals</h3>
+                <a href="#" class="see-all" @click.prevent="openSheet('savings')">+ New</a>
+            </div>
+            <div class="goals-list">
+                <div v-for="goal in goals" :key="goal.id" class="goal-item">
+                    <div class="goal-top">
+                        <span class="goal-name">{{ goal.name }}</span>
+                        <span class="goal-amount">£{{ formatCurrency(goal.current) }}</span>
+                    </div>
+                    <div class="goal-progress">
+                        <span>Target: £{{ formatCurrency(goal.target) }}</span>
+                        <span>{{ Math.round((goal.current / goal.target) * 100) }}%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="fill" :style="{ width: Math.min((goal.current / goal.target) * 100, 100) + '%' }"></div>
+                    </div>
+                    <div class="goal-actions">
+                        <button class="btn-add" @click="addToGoal(goal.id)"><i class="fas fa-plus"></i> Add</button>
+                        <button class="btn-complete" :class="{ done: goal.status === 'completed' }" @click="completeGoal(goal.id)">
+                            {{ goal.status === 'completed' ? '✓ Done' : 'Complete' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        BUDGET OVERVIEW
+        ========================================== -->
+        <div class="section-card" v-if="budgets.length > 0">
+            <div class="section-header">
+                <h3><i class="fas fa-chart-pie"></i> Budget</h3>
+                <a href="#" class="see-all" @click.prevent="openSheet('budget')">+ Add</a>
+            </div>
+            <div class="budget-items">
+                <div v-for="budget in budgets" :key="budget.id" class="budget-item">
+                    <div class="budget-info">
+                        <span class="budget-name">{{ budget.category }}</span>
+                        <span class="budget-amount">£{{ formatCurrency(budget.spent) }} / £{{ formatCurrency(budget.limit) }}</span>
+                    </div>
+                    <div class="progress">
+                        <div class="fill" :class="(budget.spent / budget.limit) * 100 > 90 ? 'danger' : (budget.spent / budget.limit) * 100 > 70 ? 'warning' : 'success'" :style="{ width: Math.min((budget.spent / budget.limit) * 100, 100) + '%' }"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        RECURRING TRANSACTIONS
+        ========================================== -->
+        <div class="section-card" v-if="recurringTransactions.length > 0">
+            <div class="section-header">
+                <h3><i class="fas fa-sync"></i> Recurring</h3>
+                <a href="#" class="see-all" @click.prevent="openSheet('recurring')">+ Add</a>
+            </div>
+            <div class="recurring-items">
+                <div v-for="rec in recurringTransactions" :key="rec.id" class="rec-item">
+                    <div class="rec-left">
+                        <span class="rec-name">{{ rec.name }}</span>
+                        <div class="rec-details">
+                            <span><i class="fas fa-calendar"></i> {{ rec.frequency }}</span>
+                            <span><i class="fas fa-tag"></i> {{ rec.category }}</span>
+                            <span><i class="fas fa-clock"></i> {{ rec.nextDate }}</span>
+                        </div>
+                    </div>
+                    <div class="rec-right">
+                        <div class="rec-amount" :class="rec.type === 'deposit' ? 'income' : 'expense'">
+                            {{ rec.type === 'deposit' ? '+' : '-' }}£{{ formatCurrency(rec.amount) }}
+                        </div>
+                        <span class="rec-status" :class="rec.status">{{ rec.status }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        EMERGENCY FUND
+        ========================================== -->
+        <div class="section-card" v-if="emergencyFund">
+            <div class="emergency-card">
+                <div class="em-header">
+                    <span><i class="fas fa-shield-alt"></i> Emergency Fund</span>
+                    <span class="em-status">{{ emergencyFund.current >= emergencyFund.target ? '🎉 Achieved' : 'Building' }}</span>
+                </div>
+                <div class="em-amounts">
+                    <span>£{{ formatCurrency(emergencyFund.current) }}</span>
+                    <span>Target: £{{ formatCurrency(emergencyFund.target) }}</span>
+                </div>
+                <div class="progress">
+                    <div class="fill" :style="{ width: Math.min((emergencyFund.current / emergencyFund.target) * 100, 100) + '%' }"></div>
+                </div>
+                <div class="em-actions">
+                    <button @click="openSheet('emergency_add')"><i class="fas fa-plus"></i> Add</button>
+                    <button v-if="emergencyFund.current >= 10" @click="openSheet('emergency_withdraw')"><i class="fas fa-hand-holding-usd"></i> Withdraw</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        RECENT TRANSACTIONS
+        ========================================== -->
+        <div class="section-card">
+            <div class="section-header">
+                <h3><i class="fas fa-history"></i> Recent</h3>
+                <a href="#" class="see-all" @click.prevent="viewAllTransactions">See All</a>
+            </div>
+            <div v-for="tx in transactions.slice(0, 5)" :key="tx.id" class="transaction-item">
+                <div class="tx-icon" :class="tx.type">
+                    <i :class="tx.icon"></i>
+                </div>
+                <div class="tx-info">
+                    <div class="tx-desc">{{ tx.description }}</div>
+                    <div class="tx-meta">
+                        <span><i class="fas fa-calendar-alt"></i> {{ tx.date }}</span>
+                        <span><i class="fas fa-tag"></i> {{ tx.category }}</span>
+                    </div>
+                </div>
+                <div class="tx-amount" :class="tx.type === 'deposit' ? 'positive' : 'negative'">
+                    {{ tx.type === 'deposit' ? '+' : '-' }}£{{ formatCurrency(tx.amount) }}
+                    <span class="tx-status">{{ tx.status }}</span>
+                </div>
+            </div>
+            <div v-if="transactions.length === 0" class="text-center text-muted" style="padding:20px 0;">
+                No transactions yet
+            </div>
+        </div>
+
+        <!-- ==========================================
+        BOTTOM NAVIGATION
+        ========================================== -->
+        <nav class="bottom-nav">
+            <button class="nav-item" :class="{ active: activeTab === 'home' }" @click="activeTab = 'home'; scrollToTop()">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-item" :class="{ active: activeTab === 'transactions' }" @click="activeTab = 'transactions'">
+                <i class="fas fa-list-ul nav-icon"></i>
+                <span class="nav-label">History</span>
+            </button>
+            <button class="nav-item center-btn" @click="openSheet('deposit')">
+                <span class="nav-icon"><i class="fas fa-plus"></i></span>
+                <span class="nav-label" style="color:var(--gray-400);margin-top:2px;">Add</span>
+            </button>
+            <button class="nav-item" :class="{ active: activeTab === 'savings' }" @click="activeTab = 'savings'; scrollToTop()">
+                <i class="fas fa-piggy-bank nav-icon"></i>
+                <span class="nav-label">Savings</span>
+                <span class="nav-badge" v-if="activeGoals > 0">{{ activeGoals }}</span>
+            </button>
+            <button class="nav-item" :class="{ active: activeTab === 'profile' }" @click="activeTab = 'profile'">
+                <i class="fas fa-user nav-icon"></i>
+                <span class="nav-label">Profile</span>
+            </button>
+        </nav>
+
+        <!-- ==========================================
+        BOTTOM SHEET (Modal)
+        ========================================== -->
+        <div class="modal-overlay" :class="{ active: sheetOpen }" @click.self="closeSheet">
+            <div class="bottom-sheet">
+                <div class="sheet-handle"></div>
+
+                <div class="sheet-title">
+                    <i :class="sheetIcon"></i> {{ sheetTitle }}
+                </div>
+                <div class="sheet-subtitle" v-if="sheetSubtitle">{{ sheetSubtitle }}</div>
+
+                <!-- Deposit / Withdraw / Payment -->
+                <div v-if="sheetType === 'deposit' || sheetType === 'withdraw' || sheetType === 'payment'">
+                    <div class="form-group">
+                        <label>Amount (£)</label>
+                        <input type="number" step="0.01" min="0.01" v-model="form.amount" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" v-model="form.description" :placeholder="sheetType === 'deposit' ? 'e.g., Bank transfer' : sheetType === 'withdraw' ? 'e.g., ATM withdrawal' : 'e.g., Tuition fee'">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select v-model="form.category">
+                            <option value="food">Food & Dining</option>
+                            <option value="transport">Transport</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="education">Education</option>
+                            <option value="housing">Housing</option>
+                            <option value="utilities">Utilities</option>
+                            <option value="health">Health</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div v-if="sheetType === 'deposit' || sheetType === 'withdraw'" class="form-group">
+                        <label>Payment Method</label>
+                        <select v-model="form.paymentMethod">
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="debit_card">Debit Card</option>
+                            <option value="credit_card">Credit Card</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+                    <div v-if="sheetType === 'transfer'" class="form-group">
+                        <label>Recipient Email</label>
+                        <input type="email" v-model="form.recipient" placeholder="student@wlv.ac.uk">
+                    </div>
+                    <div class="form-group">
+                        <label>Notes (Optional)</label>
+                        <textarea v-model="form.notes" rows="2" placeholder="Additional notes..."></textarea>
+                    </div>
+                    <button class="btn-primary" @click="submitTransaction">
+                        <i class="fas fa-check-circle"></i> {{ sheetType === 'deposit' ? 'Deposit' : sheetType === 'withdraw' ? 'Withdraw' : 'Pay' }}
+                    </button>
+                    <button class="btn-secondary" @click="closeSheet">Cancel</button>
+                </div>
+
+                <!-- Savings Goal -->
+                <div v-if="sheetType === 'savings'">
+                    <div class="form-group">
+                        <label>Goal Name</label>
+                        <input type="text" v-model="form.goalName" placeholder="e.g., New Laptop">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Target (£)</label>
+                            <input type="number" step="0.01" min="0.01" v-model="form.goalTarget" placeholder="500">
+                        </div>
+                        <div class="form-group">
+                            <label>Deadline</label>
+                            <input type="date" v-model="form.goalDeadline">
+                        </div>
+                    </div>
+                    <button class="btn-primary" @click="createGoal"><i class="fas fa-save"></i> Create Goal</button>
+                    <button class="btn-secondary" @click="closeSheet">Cancel</button>
+                </div>
+
+                <!-- Budget -->
+                <div v-if="sheetType === 'budget'">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select v-model="form.budgetCategory">
+                            <option value="food">Food & Dining</option>
+                            <option value="transport">Transport</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="education">Education</option>
+                            <option value="housing">Housing</option>
+                            <option value="utilities">Utilities</option>
+                            <option value="health">Health</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Monthly Budget (£)</label>
+                        <input type="number" step="0.01" min="0" v-model="form.budgetAmount" placeholder="100.00">
+                    </div>
+                    <button class="btn-primary" @click="setBudget"><i class="fas fa-save"></i> Set Budget</button>
+                    <button class="btn-secondary" @click="closeSheet">Cancel</button>
+                </div>
+
+                <!-- Recurring -->
+                <div v-if="sheetType === 'recurring'">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" v-model="form.recName" placeholder="e.g., Monthly Rent">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Amount (£)</label>
+                            <input type="number" step="0.01" min="0.01" v-model="form.recAmount" placeholder="500">
+                        </div>
+                        <div class="form-group">
+                            <label>Frequency</label>
+                            <select v-model="form.recFrequency">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="biweekly">Bi-Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="quarterly">Quarterly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Type</label>
+                            <select v-model="form.recType">
+                                <option value="payment">Payment (Expense)</option>
+                                <option value="deposit">Deposit (Income)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select v-model="form.recCategory">
+                                <option value="food">Food & Dining</option>
+                                <option value="transport">Transport</option>
+                                <option value="shopping">Shopping</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="education">Education</option>
+                                <option value="housing">Housing</option>
+                                <option value="utilities">Utilities</option>
+                                <option value="health">Health</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" v-model="form.recStartDate">
+                    </div>
+                    <button class="btn-primary" @click="addRecurring"><i class="fas fa-save"></i> Add Recurring</button>
+                    <button class="btn-secondary" @click="closeSheet">Cancel</button>
+                </div>
+
+                <!-- Emergency Add -->
+                <div v-if="sheetType === 'emergency_add'">
+                    <div class="form-group">
+                        <label>Amount (£)</label>
+                        <input type="number" step="0.01" min="1" v-model="form.emergencyAmount" placeholder="25.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Notes (Optional)</label>
+                        <textarea v-model="form.emergencyNotes" rows="2" placeholder="Monthly contribution..."></textarea>
+                    </div>
+                    <button class="btn-primary" @click="addEmergencyFunds"><i class="fas fa-plus"></i> Add to Emergency Fund</button>
+                    <button class="btn-secondary" @click="closeSheet">Cancel</button>
+                </div>
+
+                <!-- Emergency Withdraw -->
+                <div v-if="sheetType === 'emergency_withdraw'">
+                    <div class="form-group">
+                        <label>Amount to Withdraw (£)</label>
+                        <input type="number" step="0.01" min="1" v-model="form.emergencyWithdraw" :max="emergencyFund ? emergencyFund.current : 0">
+                        <div class="form-hint" v-if="emergencyFund">Available: £{{ formatCurrency(emergencyFund.current) }}</div>
+                    </div>
+                    <button class="btn-danger" @click="withdrawEmergency"><i class="fas fa-hand-holding-usd"></i> Withdraw</button>
+                    <button class="btn-secondary" @click="closeSheet">Cancel</button>
+                </div>
+
+                <!-- Reports -->
+                <div v-if="sheetType === 'reports'">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" v-model="form.reportStart">
+                        </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" v-model="form.reportEnd">
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-primary" @click="generateReport"><i class="fas fa-filter"></i> Apply</button>
+                        <button class="btn-secondary" @click="generatePDF"><i class="fas fa-file-pdf"></i> PDF</button>
+                    </div>
+                    <button class="btn-secondary" style="margin-top:8px;" @click="closeSheet">Cancel</button>
+                </div>
+
+                <!-- Profile -->
+                <div v-if="sheetType === 'profile'">
+                    <div style="text-align:center;padding:10px 0 20px;">
+                        <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--secondary),var(--accent));margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:32px;color:white;font-weight:700;">JS</div>
+                        <h3 style="font-size:20px;font-weight:700;">John Smith</h3>
+                        <p style="color:var(--gray-500);font-size:14px;">john.smith@wlv.ac.uk</p>
+                        <p style="color:var(--gray-500);font-size:13px;margin-top:4px;"><i class="fas fa-id-card"></i> {{ studentId }}</p>
+                    </div>
+                    <div style="border-top:1px solid var(--gray-200);padding-top:16px;">
+                        <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--gray-100);">
+                            <span style="color:var(--gray-600);">Course</span>
+                            <span style="font-weight:600;">{{ course }}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--gray-100);">
+                            <span style="color:var(--gray-600);">Year of Study</span>
+                            <span style="font-weight:600;">{{ yearOfStudy }}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--gray-100);">
+                            <span style="color:var(--gray-600);">Balance</span>
+                            <span style="font-weight:700;color:var(--primary);">£{{ formatCurrency(balance) }}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;padding:12px 0;">
+                            <span style="color:var(--gray-600);">Member Since</span>
+                            <span style="font-weight:600;">Sep 2024</span>
+                        </div>
+                    </div>
+                    <button class="btn-danger" style="margin-top:16px;" @click="logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    <button class="btn-secondary" @click="closeSheet">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        TOAST
+        ========================================== -->
+        <div class="toast" :class="toastType" :style="{ display: toastMessage ? 'flex' : 'none' }">
+            <i :class="toastIcon"></i>
+            {{ toastMessage }}
+            <button class="toast-close" @click="toastMessage = null">&times;</button>
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+    VUE JS
+    ========================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.min.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+
+            data: {
+                // User
+                balance: 1250.75,
+                studentId: 'WLV2024001',
+                course: 'Computer Science',
+                yearOfStudy: 2,
+                dailySpend: 32.50,
+                dailyLimit: 50.00,
+                totalTransactions: 47,
+                activeGoals: 3,
+                monthlyIncome: 875.00,
+                unreadAlerts: 2,
+                unreadCount: 3,
+
+                // Notifications
+                showNotifications: false,
+                notifications: [
+                    { id: 1, type: 'success', icon: 'fas fa-check-circle', title: 'Deposit Received',
+                        message: '£50.00 has been added to your account.', time: '2 hours ago' },
+                    { id: 2, type: 'warning', icon: 'fas fa-exclamation-triangle', title: 'Low Balance Alert',
+                        message: 'Your balance is below £100.', time: '1 day ago' },
+                    { id: 3, type: 'info', icon: 'fas fa-info-circle', title: 'Savings Goal Update',
+                        message: 'You\'re 75% towards your Laptop goal!', time: '3 days ago' },
+                ],
+
+                // Goals
+                goals: [
+                    { id: 1, name: 'New Laptop', current: 750, target: 1000, status: 'active',
+                    deadline: '15/12/2024' },
+                    { id: 2, name: 'Spring Break Trip', current: 320, target: 600, status: 'active',
+                    deadline: '20/03/2025' },
+                    { id: 3, name: 'Graduation Fund', current: 1200, target: 2000, status: 'active',
+                        deadline: '30/06/2025' },
+                ],
+
+                // Budgets
+                budgets: [
+                    { id: 1, category: 'Food & Dining', spent: 215, limit: 400 },
+                    { id: 2, category: 'Transport', spent: 85, limit: 150 },
+                    { id: 3, category: 'Entertainment', spent: 120, limit: 200 },
+                    { id: 4, category: 'Shopping', spent: 45, limit: 100 },
+                ],
+
+                // Recurring
+                recurringTransactions: [
+                    { id: 1, name: 'Monthly Rent', amount: 450, frequency: 'Monthly', type: 'payment',
+                        category: 'Housing', nextDate: '01/12/2024', status: 'active' },
+                    { id: 2, name: 'Netflix', amount: 10.99, frequency: 'Monthly', type: 'payment',
+                        category: 'Entertainment', nextDate: '15/11/2024', status: 'active' },
+                    { id: 3, name: 'Salary', amount: 400, frequency: 'Monthly', type: 'deposit',
+                        category: 'Income', nextDate: '25/11/2024', status: 'active' },
+                ],
+
+                // Emergency Fund
+                emergencyFund: { current: 275, target: 500 },
+
+                // Transactions
+                transactions: [
+                    { id: 1, date: '15/11', type: 'deposit', icon: 'fa-arrow-down', amount: 200,
+                        description: 'Student Loan', category: 'Education', status: 'completed' },
+                    { id: 2, date: '14/11', type: 'withdrawal', icon: 'fa-arrow-up', amount: 45.50,
+                        description: 'ATM Withdrawal', category: 'Other', status: 'completed' },
+                    { id: 3, date: '13/11', type: 'payment', icon: 'fa-credit-card', amount: 120,
+                        description: 'Library Fine', category: 'Education', status: 'completed' },
+                    { id: 4, date: '12/11', type: 'deposit', icon: 'fa-arrow-down', amount: 50,
+                        description: 'Birthday Gift', category: 'Gift', status: 'completed' },
+                    { id: 5, date: '11/11', type: 'payment', icon: 'fa-credit-card', amount: 32.75,
+                        description: 'Netflix', category: 'Entertainment', status: 'completed' },
+                ],
+
+                // Sheet / Modal
+                sheetOpen: false,
+                sheetType: '',
+                sheetTitle: '',
+                sheetIcon: '',
+                sheetSubtitle: '',
+
+                // Form
+                form: {
+                    amount: '',
+                    description: '',
+                    category: 'other',
+                    paymentMethod: 'bank_transfer',
+                    recipient: '',
+                    notes: '',
+                    goalName: '',
+                    goalTarget: '',
+                    goalDeadline: '',
+                    budgetCategory: 'food',
+                    budgetAmount: '',
+                    recName: '',
+                    recAmount: '',
+                    recFrequency: 'monthly',
+                    recType: 'payment',
+                    recCategory: 'other',
+                    recStartDate: '',
+                    emergencyAmount: '',
+                    emergencyNotes: '',
+                    emergencyWithdraw: '',
+                    reportStart: '',
+                    reportEnd: '',
+                },
+
+                // Toast
+                toastMessage: null,
+                toastType: 'success',
+
+                // Active tab
+                activeTab: 'home',
+
+                // Profile
+                showProfile: false,
+            },
+
+            computed: {
+                dailyPercent() {
+                    return Math.min((this.dailySpend / this.dailyLimit) * 100, 100);
+                },
+                toastIcon() {
+                    return this.toastType === 'success' ? 'fas fa-check-circle' :
+                        this.toastType === 'error' ? 'fas fa-exclamation-circle' :
+                        'fas fa-info-circle';
+                },
+                greetingTime() {
+                    const hour = new Date().getHours();
+                    if (hour < 12) return 'Morning';
+                    if (hour < 17) return 'Afternoon';
+                    return 'Evening';
+                }
+            },
+
+            methods: {
+                formatCurrency(value) {
+                    return Number(value).toFixed(2);
+                },
+
+                toggleNotifications() {
+                    this.showNotifications = !this.showNotifications;
+                },
+
+                openSheet(type) {
+                    this.sheetType = type;
+                    this.sheetOpen = true;
+                    this.resetForm();
+
+                    const configs = {
+                        deposit: ['Deposit Funds', 'fa-plus-circle', 'Add money to your wallet'],
+                        withdraw: ['Withdraw Funds', 'fa-minus-circle', 'Withdraw money from your wallet'],
+                        payment: ['Make Payment', 'fa-credit-card', 'Pay for goods or services'],
+                        transfer: ['Transfer Funds', 'fa-exchange-alt', 'Send money to another student'],
+                        savings: ['Create Savings Goal', 'fa-piggy-bank', 'Set a new savings target'],
+                        budget: ['Set Budget', 'fa-chart-pie', 'Create a monthly budget category'],
+                        recurring: ['Add Recurring', 'fa-sync', 'Set up a recurring payment or income'],
+                        emergency_add: ['Add to Emergency Fund', 'fa-shield-alt', 'Build your safety net'],
+                        emergency_withdraw: ['Withdraw Emergency Fund', 'fa-hand-holding-usd',
+                            'Only for genuine emergencies'
+                        ],
+                        reports: ['Generate Report', 'fa-file-alt', 'View financial summary'],
+                        profile: ['Profile', 'fa-user', 'Your account details'],
+                    };
+
+                    const [title, icon, subtitle] = configs[type] || ['Transaction', 'fa-cog', ''];
+                    this.sheetTitle = title;
+                    this.sheetIcon = 'fas ' + icon;
+                    this.sheetSubtitle = subtitle || '';
+
+                    if (type === 'reports') {
+                        const now = new Date();
+                        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+                        this.form.reportStart = firstDay.toISOString().split('T')[0];
+                        this.form.reportEnd = now.toISOString().split('T')[0];
+                    }
+                    if (type === 'recurring') {
+                        this.form.recStartDate = new Date().toISOString().split('T')[0];
+                    }
+                    if (type === 'profile') {
+                        this.sheetSubtitle = '';
+                    }
+                },
+
+                closeSheet() {
+                    this.sheetOpen = false;
+                    this.resetForm();
+                },
+
+                resetForm() {
+                    this.form = {
+                        amount: '',
+                        description: '',
+                        category: 'other',
+                        paymentMethod: 'bank_transfer',
+                        recipient: '',
+                        notes: '',
+                        goalName: '',
+                        goalTarget: '',
+                        goalDeadline: '',
+                        budgetCategory: 'food',
+                        budgetAmount: '',
+                        recName: '',
+                        recAmount: '',
+                        recFrequency: 'monthly',
+                        recType: 'payment',
+                        recCategory: 'other',
+                        recStartDate: '',
+                        emergencyAmount: '',
+                        emergencyNotes: '',
+                        emergencyWithdraw: '',
+                        reportStart: '',
+                        reportEnd: '',
+                    };
+                },
+
+                showToast(message, type = 'success') {
+                    this.toastMessage = message;
+                    this.toastType = type;
+                    setTimeout(() => { this.toastMessage = null; }, 3500);
+                },
+
+                submitTransaction() {
+                    const amount = parseFloat(this.form.amount);
+                    if (!amount || amount <= 0) {
+                        this.showToast('Please enter a valid amount', 'error');
+                        return;
+                    }
+
+                    const type = this.sheetType;
+                    const label = type.charAt(0).toUpperCase() + type.slice(1);
+
+                    if (type === 'deposit') {
+                        this.balance += amount;
+                    } else {
+                        if (amount > this.balance) {
+                            this.showToast('Insufficient balance', 'error');
+                            return;
+                        }
+                        this.balance -= amount;
+                    }
+
+                    const now = new Date();
+                    const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+                    this.transactions.unshift({
+                        id: Date.now(),
+                        date: dateStr,
+                        type: type,
+                        icon: type === 'deposit' ? 'fa-arrow-down' : type === 'withdrawal' ? 'fa-arrow-up' :
+                            'fa-credit-card',
+                        amount: amount,
+                        description: this.form.description || label,
+                        category: this.form.category || 'other',
+                        status: 'completed',
+                    });
+
+                    this.showToast(`${label} of £${this.formatCurrency(amount)} completed!`, 'success');
+                    this.closeSheet();
+                },
+
+                createGoal() {
+                    if (!this.form.goalName || !this.form.goalTarget || parseFloat(this.form.goalTarget) <= 0) {
+                        this.showToast('Please fill in all fields correctly', 'error');
+                        return;
+                    }
+                    this.goals.push({
+                        id: Date.now(),
+                        name: this.form.goalName,
+                        current: 0,
+                        target: parseFloat(this.form.goalTarget),
+                        status: 'active',
+                        deadline: this.form.goalDeadline ? new Date(this.form.goalDeadline).toLocaleDateString(
+                            'en-GB') : 'No deadline',
+                    });
+                    this.activeGoals = this.goals.filter(g => g.status === 'active').length;
+                    this.showToast(`Goal "${this.form.goalName}" created!`, 'success');
+                    this.closeSheet();
+                },
+
+                addToGoal(id) {
+                    const amount = prompt('Enter amount to add (£):');
+                    if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                        const goal = this.goals.find(g => g.id === id);
+                        if (goal) {
+                            const amt = parseFloat(amount);
+                            goal.current += amt;
+                            this.balance -= amt;
+                            const now = new Date();
+                            this.transactions.unshift({
+                                id: Date.now(),
+                                date: now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+                                type: 'withdrawal',
+                                icon: 'fa-arrow-up',
+                                amount: amt,
+                                description: `Savings: ${goal.name}`,
+                                category: 'savings',
+                                status: 'completed',
+                            });
+                            this.showToast(`Added £${this.formatCurrency(amt)} to "${goal.name}"`, 'success');
+                        }
+                    }
+                },
+
+                completeGoal(id) {
+                    const goal = this.goals.find(g => g.id === id);
+                    if (goal && goal.status !== 'completed') {
+                        if (confirm(`Mark "${goal.name}" as completed?`)) {
+                            goal.status = 'completed';
+                            this.activeGoals = this.goals.filter(g => g.status === 'active').length;
+                            this.showToast(`🎉 "${goal.name}" completed!`, 'success');
+                        }
+                    }
+                },
+
+                setBudget() {
+                    if (!this.form.budgetCategory || !this.form.budgetAmount || parseFloat(this.form.budgetAmount) <=
+                        0) {
+                        this.showToast('Please enter a valid budget amount', 'error');
+                        return;
+                    }
+                    const existing = this.budgets.find(b => b.category === this.form.budgetCategory);
+                    const amt = parseFloat(this.form.budgetAmount);
+                    if (existing) {
+                        existing.limit = amt;
+                        this.showToast(`Budget for "${this.form.budgetCategory}" updated!`, 'success');
+                    } else {
+                        this.budgets.push({
+                            id: Date.now(),
+                            category: this.form.budgetCategory,
+                            spent: 0,
+                            limit: amt,
+                        });
+                        this.showToast(`Budget for "${this.form.budgetCategory}" created!`, 'success');
+                    }
+                    this.closeSheet();
+                },
+
+                addRecurring() {
+                    if (!this.form.recName || !this.form.recAmount || parseFloat(this.form.recAmount) <= 0) {
+                        this.showToast('Please fill in all required fields', 'error');
+                        return;
+                    }
+                    this.recurringTransactions.push({
+                        id: Date.now(),
+                        name: this.form.recName,
+                        amount: parseFloat(this.form.recAmount),
+                        frequency: this.form.recFrequency,
+                        type: this.form.recType,
+                        category: this.form.recCategory,
+                        nextDate: this.form.recStartDate ? new Date(this.form.recStartDate).toLocaleDateString(
+                            'en-GB') : 'Today',
+                        status: 'active',
+                    });
+                    this.showToast(`Recurring "${this.form.recName}" added!`, 'success');
+                    this.closeSheet();
+                },
+
+                addEmergencyFunds() {
+                    const amount = parseFloat(this.form.emergencyAmount);
+                    if (!amount || amount <= 0) {
+                        this.showToast('Please enter a valid amount', 'error');
+                        return;
+                    }
+                    if (amount > this.balance) {
+                        this.showToast('Insufficient balance', 'error');
+                        return;
+                    }
+                    this.emergencyFund.current += amount;
+                    this.balance -= amount;
+                    this.showToast(`Added £${this.formatCurrency(amount)} to emergency fund!`, 'success');
+                    this.closeSheet();
+                },
+
+                withdrawEmergency() {
+                    const amount = parseFloat(this.form.emergencyWithdraw);
+                    if (!amount || amount <= 0 || amount > this.emergencyFund.current) {
+                        this.showToast('Invalid amount or insufficient funds', 'error');
+                        return;
+                    }
+                    this.emergencyFund.current -= amount;
+                    this.balance += amount;
+                    this.showToast(`Withdrew £${this.formatCurrency(amount)} from emergency fund`, 'success');
+                    this.closeSheet();
+                },
+
+                generateReport() {
+                    this.showToast('Report generated for the selected period!', 'success');
+                    this.closeSheet();
+                },
+
+                generatePDF() {
+                    this.showToast('PDF report downloaded!', 'success');
+                    this.closeSheet();
+                },
+
+                viewAllTransactions() {
+                    this.activeTab = 'transactions';
+                    this.showToast('Viewing all transactions', 'info');
+                },
+
+                viewSection(section) {
+                    const messages = {
+                        transactions: 'Viewing transactions',
+                        savings: 'Viewing savings goals',
+                        reports: 'Opening reports',
+                        notifications: 'Opening notifications'
+                    };
+                    this.showToast(messages[section] || 'Loading...', 'info');
+                    if (section === 'notifications') this.toggleNotifications();
+                },
+
+                logout() {
+                    if (confirm('Are you sure you want to logout?')) {
+                        this.showToast('Logged out successfully', 'success');
+                        this.closeSheet();
+                    }
+                },
+
+                scrollToTop() {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                },
+
+                updateStatusTime() {
+                    const now = new Date();
+                    const h = String(now.getHours()).padStart(2, '0');
+                    const m = String(now.getMinutes()).padStart(2, '0');
+                    document.getElementById('statusTime').textContent = h + ':' + m;
+                }
+            },
+
+            mounted() {
+                this.updateStatusTime();
+                setInterval(this.updateStatusTime, 30000);
+            },
+
+            watch: {
+                sheetOpen(val) {
+                    document.body.style.overflow = val ? 'hidden' : '';
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

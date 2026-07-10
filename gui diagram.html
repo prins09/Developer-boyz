@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Wallet - GUI Diagrams</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #f0f2f8;
+            color: #1e293b;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .diagram-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .diagram-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1a237e, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .diagram-header p {
+            color: #64748b;
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        .diagram-header .badge {
+            display: inline-block;
+            background: #1a237e;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i {
+            color: #667eea;
+            font-size: 24px;
+        }
+
+        .section-title .count {
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 13px;
+            padding: 2px 12px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        /* ============================================
+           SCREEN FLOW DIAGRAM
+        ============================================ */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 0;
+        }
+
+        .flow-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .flow-node {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 20px;
+            min-width: 120px;
+            text-align: center;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .flow-node:hover {
+            border-color: #667eea;
+            background: #f1f5f9;
+        }
+
+        .flow-node .node-icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .flow-node .node-label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #1e293b;
+        }
+
+        .flow-node .node-sub {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .flow-node.start {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .flow-node.end {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .flow-node.primary {
+            border-color: #667eea;
+            background: #eef2ff;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: #94a3b8;
+            padding: 0 4px;
+        }
+
+        .flow-arrow.vertical {
+            transform: rotate(90deg);
+        }
+
+        .flow-group {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            border: 2px dashed #cbd5e1;
+            position: relative;
+        }
+
+        .flow-group-label {
+            position: absolute;
+            top: -10px;
+            left: 16px;
+            background: #f1f5f9;
+            padding: 0 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ============================================
+           WIREFRAME GRID
+        ============================================ */
+        .wireframe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .wireframe-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .wireframe-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .wireframe-card .phone-frame {
+            background: #0f172a;
+            border-radius: 24px;
+            padding: 12px;
+            margin-bottom: 16px;
+            position: relative;
+            aspect-ratio: 9 / 19;
+            max-height: 420px;
+            overflow: hidden;
+        }
+
+        .wireframe-card .phone-frame .screen {
+            background: white;
+            border-radius: 16px;
+            height: 100%;
+            padding: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wireframe-card .phone-frame .status-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #94a3b8;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .wireframe-card .phone-frame .screen-content {
+            padding: 8px 0;
+            height: calc(100% - 30px);
+            overflow: hidden;
+        }
+
+        /* Wireframe elements */
+        .wf-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .wf-header .wf-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .wf-header .wf-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .wf-balance {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            border-radius: 10px;
+            padding: 12px;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .wf-balance .wf-label {
+            font-size: 9px;
+            opacity: 0.7;
+        }
+
+        .wf-balance .wf-amount {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .wf-balance .wf-row {
+            display: flex;
+            gap: 8px;
+            font-size: 8px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .wf-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin: 8px 0;
+        }
+
+        .wf-grid .wf-item {
+            text-align: center;
+            padding: 6px 0;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+
+        .wf-grid .wf-item .wf-icon {
+            font-size: 16px;
+        }
+
+        .wf-grid .wf-item .wf-label {
+            font-size: 7px;
+            color: #64748b;
+        }
+
+        .wf-item-list .wf-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 10px;
+        }
+
+        .wf-item-list .wf-item:last-child {
+            border-bottom: none;
+        }
+
+        .wf-progress {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            margin: 4px 0;
+            overflow: hidden;
+        }
+
+        .wf-progress .wf-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .wf-badge {
+            font-size: 8px;
+            padding: 1px 8px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .wf-badge.success {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        .wf-badge.warning {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        .wf-badge.danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .wf-bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 8px;
+            border-top: 1px solid #f1f5f9;
+            margin-top: auto;
+        }
+
+        .wf-bottom-nav .wf-nav-item {
+            text-align: center;
+            font-size: 8px;
+            color: #94a3b8;
+        }
+
+        .wf-bottom-nav .wf-nav-item.active {
+            color: #667eea;
+        }
+
+        .wf-bottom-nav .wf-nav-item .wf-nav-icon {
+            font-size: 16px;
+            display: block;
+        }
+
+        .wf-bottom-nav .wf-nav-item.center {
+            margin-top: -12px;
+        }
+
+        .wf-bottom-nav .wf-nav-item.center .wf-nav-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin: 0 auto 2px;
+        }
+
+        .wireframe-card .card-label {
+            font-weight: 700;
+            font-size: 15px;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .wireframe-card .card-desc {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* ============================================
+           COMPONENT BREAKDOWN
+        ============================================ */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .component-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .component-item .comp-icon {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .component-item .comp-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0f172a;
+        }
+
+        .component-item .comp-desc {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .component-item .comp-tag {
+            display: inline-block;
+            background: #e2e8f0;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #475569;
+            margin-top: 6px;
+        }
+
+        /* ============================================
+           USER FLOW
+        ============================================ */
+        .user-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .user-flow .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .user-flow .flow-step .step-num {
+            background: #667eea;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .user-flow .flow-step .step-content h4 {
+            font-weight: 600;
+            font-size: 15px;
+            color: #0f172a;
+        }
+
+        .user-flow .flow-step .step-content p {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .user-flow .flow-step .step-content .step-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
+        .user-flow .flow-step .step-content .step-actions .tag {
+            background: #e2e8f0;
+            padding: 2px 10px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        /* ============================================
+           COLOR PALETTE
+        ============================================ */
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .color-item {
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            color: white;
+        }
+
+        .color-item .color-hex {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .color-item .color-name {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .color-item.primary {
+            background: #1a237e;
+        }
+        .color-item.secondary {
+            background: #667eea;
+        }
+        .color-item.accent {
+            background: #764ba2;
+        }
+        .color-item.success {
+            background: #22c55e;
+        }
+        .color-item.danger {
+            background: #ef4444;
+        }
+        .color-item.warning {
+            background: #f59e0b;
+        }
+        .color-item.gray-800 {
+            background: #1e293b;
+        }
+        .color-item.gray-500 {
+            background: #64748b;
+        }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 12px;
+            }
+            .section {
+                padding: 20px 16px;
+            }
+            .diagram-header h1 {
+                font-size: 26px;
+            }
+            .wireframe-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .flow-row {
+                flex-direction: column;
+                align-items: center;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+            .flow-arrow.vertical {
+                transform: rotate(0deg);
+            }
+            .component-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wireframe-grid {
+                grid-template-columns: 1fr;
+            }
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+            .color-palette {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .section-title {
+                font-size: 18px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 20px;
+            }
+            .section {
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+                page-break-inside: avoid;
+            }
+            .wireframe-card:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- ==========================================
+        HEADER
+        ========================================== -->
+        <div class="diagram-header">
+            <h1>📱 Student Wallet — GUI Diagrams</h1>
+            <p>Complete visual documentation for the mobile application interface</p>
+            <span class="badge">v2.0 · Mobile-First Design</span>
+        </div>
+
+        <!-- ==========================================
+        SECTION 1: SCREEN FLOW
+        ========================================== -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-sitemap"></i> Screen Flow Diagram
+                <span class="count">11 Screens</span>
+            </div>
+
+            <div class="flow-container">
+                <!-- Row 1: Entry -->
+                <div class="flow-row">
+                    <div class="flow-node start">
+                        <span class="node-icon">🔐</span>
+                        <div class="node-label">Login</div>
+                        <div class="node-sub">Email + Password</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node primary">
+                        <span class="node-icon">🏠</span>
+                        <div class="node-label">Dashboard</div>
+                        <div class="node-sub">Home Screen</div>
+                    </div>
+                </div>
+
+                <!-- Row 2: Main Actions -->
+                <div class="flow-row">
+                    <div class="flow-group">
+                        <span class="flow-group-label">Primary Actions</span>
+
+                        <div class="flow-node">
+                            <span class="node-icon">💰</span>
+                            <div class="node-label">Deposit</div>
+                            <div class="node-sub">Add funds</div>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-node">
+                            <span class="node-icon">🏦</span>
+                            <div class="node-label">Withdraw</div>
+                            <div class="node-sub">Remove funds</div>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-node">
+                            <span class="node-icon">💳</span>
+                            <div class="node-label">Payment</div>
+                            <div class="node-sub">Pay bills</div>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-node">
+                            <span class="node-icon">🔄</span>
+                            <div class="node-label">Transfer</div>
+                            <div class="node-sub">Send money</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Secondary Features -->
+                <div class="flow-row">
+                    <div class="flow-group">
+                        <span class="flow-group-label">Secondary Features</span>
+
+                        <div class="flow-node">
+                            <span class="node-icon">🐷</span>
+                            <div class="node-label">Savings</div>
+                            <div class="node-sub">Goals</div>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-node">
+                            <span class="node-icon">📊</span>
+                            <div class="node-label">Budget</div>
+                            <div class="node-sub">Track spending</div>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-node">
+                            <span class="node-icon">🔄</span>
+                            <div class="node-label">Recurring</div>
+                            <div class="node-sub">Auto payments</div>
+                        </div>
+                        <span class="flow-arrow">→</span>
+                        <div class="flow-node">
+                            <span class="node-icon">🛡️</span>
+                            <div class="node-label">Emergency</div>
+                            <div class="node-sub">Fund</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 4: History & Reports -->
+                <div class="flow-row">
+                    <div class="flow-node">
+                        <span class="node-icon">📋</span>
+                        <div class="node-label">History</div>
+                        <div class="node-sub">Transactions</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node">
+                        <span class="node-icon">📄</span>
+                        <div class="node-label">Reports</div>
+                        <div class="node-sub">Export PDF/CSV</div>
+                    </div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-node end">
+                        <span class="node-icon">👤</span>
+                        <div class="node-label">Profile</div>
+                        <div class="node-sub">Settings</div>
+                    </div>
+                </div>
+
+                <!-- Row 5: Notifications -->
+                <div class="flow-row">
+                    <div class="flow-node" style="border-color:#f59e0b;background:#fffbeb;">
+                        <span class="node-icon">🔔</span>
+                        <div class="node-label">Notifications</div>
+                        <div class="node-sub">Global overlay</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        SECTION 2: WIREFRAMES
+        ========================================== -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-mobile-alt"></i> Screen Wireframes
+                <span class="count">8 Screens</span>
+            </div>
+
+            <div class="wireframe-grid">
+
+                <!-- 1. Dashboard -->
+                <div class="wireframe-card">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <div class="status-bar">
+                                <span>9:41</span>
+                                <span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
+                            </div>
+                            <div class="screen-content">
+                                <div class="wf-header">
+                                    <div><div class="wf-title" style="font-size:10px;color:#94a3b8;">Good Morning</div>
+                                    <div style="font-size:14px;font-weight:800;">John <span style="color:#667eea;">Smith</span></div></div>
+                                    <div class="wf-avatar"></div>
+                                </div>
+                                <div class="wf-balance">
+                                    <div class="wf-label">Available Balance</div>
+                                    <div class="wf-amount">£1,250.75</div>
+                                    <div class="wf-row">
+                                        <span>🎓 Computer Science</span>
+                                        <span>📅 Year 2</span>
+                                    </div>
+                                    <div style="margin-top:6px;background:rgba(255,255,255,0.1);border-radius:6px;padding:6px;">
+                                        <div style="display:flex;justify-content:space-between;font-size:9px;">
+                                            <span>Today's Spending</span>
+                                            <span>£32.50</span>
+                                        </div>
+                                        <div class="wf-progress" style="background:rgba(255,255,255,0.2);">
+                                            <div class="wf-fill" style="width:65%;background:#22c55e;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="wf-grid">
+                                    <div class="wf-item"><div class="wf-icon">💰</div><div class="wf-label">Deposit</div></div>
+                                    <div class="wf-item"><div class="wf-icon">🏦</div><div class="wf-label">Withdraw</div></div>
+                                    <div class="wf-item"><div class="wf-icon">💳</div><div class="wf-label">Pay</div></div>
+                                    <div class="wf-item"><div class="wf-icon">🔄</div><div class="wf-label">Transfer</div></div>
+                                </div>
+                                <div class="wf-item-list">
+                                    <div class="wf-item"><span>📈 Savings Goals</span><span>3 Active</span></div>
+                                    <div class="wf-item"><span>📊 Budget</span><span>4 Categories</span></div>
+                                    <div class="wf-item"><span>🛡️ Emergency Fund</span><span>£275 / £500</span></div>
+                                </div>
+                                <div class="wf-bottom-nav">
+                                    <div class="wf-nav-item active"><span class="wf-nav-icon">🏠</span>Home</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">📋</span>History</div>
+                                    <div class="wf-nav-item center"><span class="wf-nav-icon">+</span>Add</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🐷</span>Savings</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">👤</span>Profile</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-label">🏠 Dashboard</div>
+                    <div class="card-desc">Main landing screen with balance, quick stats, and action grid</div>
+                </div>
+
+                <!-- 2. Deposit Sheet -->
+                <div class="wireframe-card">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <div class="status-bar">
+                                <span>9:41</span>
+                                <span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
+                            </div>
+                            <div class="screen-content" style="display:flex;flex-direction:column;">
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;border-bottom:1px solid #f1f5f9;">
+                                    <span style="font-size:16px;font-weight:700;">💰 Deposit Funds</span>
+                                    <span style="font-size:20px;color:#94a3b8;">✕</span>
+                                </div>
+                                <div style="padding:12px 0;flex:1;">
+                                    <div style="background:#f8fafc;border-radius:8px;padding:12px;margin-bottom:10px;">
+                                        <div style="font-size:11px;color:#94a3b8;">Amount</div>
+                                        <div style="font-size:24px;font-weight:800;color:#0f172a;">£ <span style="border-bottom:2px solid #667eea;min-width:60px;display:inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+                                    </div>
+                                    <div style="background:#f8fafc;border-radius:8px;padding:10px;margin-bottom:8px;">
+                                        <div style="font-size:11px;color:#94a3b8;">Description</div>
+                                        <div style="font-size:14px;color:#94a3b8;">e.g., Bank transfer</div>
+                                    </div>
+                                    <div style="background:#f8fafc;border-radius:8px;padding:10px;margin-bottom:8px;">
+                                        <div style="font-size:11px;color:#94a3b8;">Category</div>
+                                        <div style="font-size:14px;color:#94a3b8;">Food & Dining ▾</div>
+                                    </div>
+                                    <div style="background:#f8fafc;border-radius:8px;padding:10px;margin-bottom:8px;">
+                                        <div style="font-size:11px;color:#94a3b8;">Payment Method</div>
+                                        <div style="font-size:14px;color:#94a3b8;">Bank Transfer ▾</div>
+                                    </div>
+                                    <div style="margin-top:12px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:8px;padding:12px;text-align:center;color:white;font-weight:700;">
+                                        <i class="fas fa-check-circle"></i> Confirm Deposit
+                                    </div>
+                                    <div style="text-align:center;margin-top:8px;font-size:13px;color:#94a3b8;">Cancel</div>
+                                </div>
+                                <div style="padding-top:8px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-around;font-size:9px;color:#94a3b8;">
+                                    <span>£10</span><span>£20</span><span>£50</span><span>£100</span><span>£200</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-label">💰 Deposit Sheet</div>
+                    <div class="card-desc">Bottom sheet for adding funds with quick amount buttons</div>
+                </div>
+
+                <!-- 3. Savings Goals -->
+                <div class="wireframe-card">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <div class="status-bar">
+                                <span>9:41</span>
+                                <span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
+                            </div>
+                            <div class="screen-content">
+                                <div class="wf-header">
+                                    <div><div style="font-size:14px;font-weight:800;">🐷 Savings Goals</div></div>
+                                    <span style="font-size:11px;color:#667eea;font-weight:600;">+ New</span>
+                                </div>
+
+                                <div style="background:#f8fafc;border-radius:10px;padding:10px;margin-bottom:8px;">
+                                    <div style="display:flex;justify-content:space-between;">
+                                        <span style="font-weight:600;font-size:12px;">New Laptop</span>
+                                        <span style="font-weight:700;font-size:12px;color:#1a237e;">£750</span>
+                                    </div>
+                                    <div style="display:flex;justify-content:space-between;font-size:9px;color:#94a3b8;">
+                                        <span>Target: £1,000</span>
+                                        <span>75%</span>
+                                    </div>
+                                    <div class="wf-progress"><div class="wf-fill" style="width:75%;"></div></div>
+                                    <div style="display:flex;gap:6px;margin-top:6px;">
+                                        <span style="background:#22c55e;color:white;padding:2px 10px;border-radius:50px;font-size:9px;font-weight:600;">+ Add</span>
+                                        <span style="background:#e2e8f0;color:#475569;padding:2px 10px;border-radius:50px;font-size:9px;font-weight:600;">Complete</span>
+                                    </div>
+                                </div>
+
+                                <div style="background:#f8fafc;border-radius:10px;padding:10px;margin-bottom:8px;">
+                                    <div style="display:flex;justify-content:space-between;">
+                                        <span style="font-weight:600;font-size:12px;">Spring Break Trip</span>
+                                        <span style="font-weight:700;font-size:12px;color:#1a237e;">£320</span>
+                                    </div>
+                                    <div style="display:flex;justify-content:space-between;font-size:9px;color:#94a3b8;">
+                                        <span>Target: £600</span>
+                                        <span>53%</span>
+                                    </div>
+                                    <div class="wf-progress"><div class="wf-fill" style="width:53%;"></div></div>
+                                    <div style="display:flex;gap:6px;margin-top:6px;">
+                                        <span style="background:#22c55e;color:white;padding:2px 10px;border-radius:50px;font-size:9px;font-weight:600;">+ Add</span>
+                                        <span style="background:#e2e8f0;color:#475569;padding:2px 10px;border-radius:50px;font-size:9px;font-weight:600;">Complete</span>
+                                    </div>
+                                </div>
+
+                                <div style="background:#f8fafc;border-radius:10px;padding:10px;">
+                                    <div style="display:flex;justify-content:space-between;">
+                                        <span style="font-weight:600;font-size:12px;">Graduation Fund</span>
+                                        <span style="font-weight:700;font-size:12px;color:#1a237e;">£1,200</span>
+                                    </div>
+                                    <div style="display:flex;justify-content:space-between;font-size:9px;color:#94a3b8;">
+                                        <span>Target: £2,000</span>
+                                        <span>60%</span>
+                                    </div>
+                                    <div class="wf-progress"><div class="wf-fill" style="width:60%;"></div></div>
+                                    <div style="display:flex;gap:6px;margin-top:6px;">
+                                        <span style="background:#22c55e;color:white;padding:2px 10px;border-radius:50px;font-size:9px;font-weight:600;">+ Add</span>
+                                        <span style="background:#e2e8f0;color:#475569;padding:2px 10px;border-radius:50px;font-size:9px;font-weight:600;">Complete</span>
+                                    </div>
+                                </div>
+
+                                <div class="wf-bottom-nav">
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🏠</span>Home</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">📋</span>History</div>
+                                    <div class="wf-nav-item center"><span class="wf-nav-icon">+</span>Add</div>
+                                    <div class="wf-nav-item active"><span class="wf-nav-icon">🐷</span>Savings</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">👤</span>Profile</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-label">🐷 Savings Goals</div>
+                    <div class="card-desc">Track progress toward multiple savings targets</div>
+                </div>
+
+                <!-- 4. Budget -->
+                <div class="wireframe-card">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <div class="status-bar">
+                                <span>9:41</span>
+                                <span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
+                            </div>
+                            <div class="screen-content">
+                                <div class="wf-header">
+                                    <div><div style="font-size:14px;font-weight:800;">📊 Budget</div></div>
+                                    <span style="font-size:11px;color:#667eea;font-weight:600;">+ Add</span>
+                                </div>
+
+                                <div style="background:#f8fafc;border-radius:10px;padding:10px;margin-bottom:6px;">
+                                    <div style="display:flex;justify-content:space-between;font-size:11px;">
+                                        <span style="font-weight:500;">Food & Dining</span>
+                                        <span style="font-weight:600;">£215 / £400</span>
+                                    </div>
+                                    <div class="wf-progress"><div class="wf-fill" style="width:54%;background:#22c55e;"></div></div>
+                                </div>
+
+                                <div style="background:#f8fafc;border-radius:10px;padding:10px;margin-bottom:6px;">
+                                    <div style="display:flex;justify-content:space-between;font-size:11px;">
+                                        <span style="font-weight:500;">Transport</span>
+                                        <span style="font-weight:600;">£85 / £150</span>
+                                    </div>
+                                    <div class="wf-progress"><div class="wf-fill" style="width:57%;background:#22c55e;"></div></div>
+                                </div>
+
+                                <div style="background:#f8fafc;border-radius:10px;padding:10px;margin-bottom:6px;">
+                                    <div style="display:flex;justify-content:space-between;font-size:11px;">
+                                        <span style="font-weight:500;">Entertainment</span>
+                                        <span style="font-weight:600;">£120 / £200</span>
+                                    </div>
+                                    <div class="wf-progress"><div class="wf-fill" style="width:60%;background:#f59e0b;"></div></div>
+                                </div>
+
+                                <div style="background:#f8fafc;border-radius:10px;padding:10px;">
+                                    <div style="display:flex;justify-content:space-between;font-size:11px;">
+                                        <span style="font-weight:500;">Shopping</span>
+                                        <span style="font-weight:600;">£45 / £100</span>
+                                    </div>
+                                    <div class="wf-progress"><div class="wf-fill" style="width:45%;background:#22c55e;"></div></div>
+                                </div>
+
+                                <div style="margin-top:12px;background:#f1f5f9;border-radius:10px;padding:10px;text-align:center;border:2px dashed #cbd5e1;">
+                                    <div style="font-size:11px;color:#94a3b8;">+ Add Budget Category</div>
+                                </div>
+
+                                <div class="wf-bottom-nav">
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🏠</span>Home</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">📋</span>History</div>
+                                    <div class="wf-nav-item center"><span class="wf-nav-icon">+</span>Add</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🐷</span>Savings</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">👤</span>Profile</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-label">📊 Budget</div>
+                    <div class="card-desc">Track spending against monthly budget limits</div>
+                </div>
+
+                <!-- 5. Recurring -->
+                <div class="wireframe-card">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <div class="status-bar">
+                                <span>9:41</span>
+                                <span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
+                            </div>
+                            <div class="screen-content">
+                                <div class="wf-header">
+                                    <div><div style="font-size:14px;font-weight:800;">🔄 Recurring</div></div>
+                                    <span style="font-size:11px;color:#667eea;font-weight:600;">+ Add</span>
+                                </div>
+
+                                <div style="background:#f8fafc;border-radius:10px;padding:10px;margin-bottom:6px;">
+                                    <div style="display:flex;justify-content:space-between;">
+                                        <span style="font-weight:600;font-size:12px;">Monthly Rent</span>
+                                        <span style="font-weight:700;font-size:12px;color:#dc2626;">-£450</span>
+                                    </div>
+                                    <div style="display:flex;gap:10px;font-size:9px;color:#94a3b8;margin-top:2px;">
+                                        <span><i class="fas fa-calendar"></i> Monthly</span>
+                                        <span><i class="fas fa-tag"></i> Housing</span>
+                                        <span><i class="fas fa-clock"></i> 01/12/2024</span>
+                                    </div>
+                                    <span class="wf-badge success">Active</span>
+                                </div>
+
+                                <div style="background:#f8fafc;border-radius:10px;padding:10px;margin-bottom:6px;">
+                                    <div style="display:flex;justify-content:space-between;">
+                                        <span style="font-weight:600;font-size:12px;">Netflix</span>
+                                        <span style="font-weight:700;font-size:12px;color:#dc2626;">-£10.99</span>
+                                    </div>
+                                    <div style="display:flex;gap:10px;font-size:9px;color:#94a3b8;margin-top:2px;">
+                                        <span><i class="fas fa-calendar"></i> Monthly</span>
+                                        <span><i class="fas fa-tag"></i> Entertainment</span>
+                                        <span><i class="fas fa-clock"></i> 15/11/2024</span>
+                                    </div>
+                                    <span class="wf-badge success">Active</span>
+                                </div>
+
+                                <div style="background:#f8fafc;border-radius:10px;padding:10px;">
+                                    <div style="display:flex;justify-content:space-between;">
+                                        <span style="font-weight:600;font-size:12px;">Part-time Salary</span>
+                                        <span style="font-weight:700;font-size:12px;color:#22c55e;">+£400</span>
+                                    </div>
+                                    <div style="display:flex;gap:10px;font-size:9px;color:#94a3b8;margin-top:2px;">
+                                        <span><i class="fas fa-calendar"></i> Monthly</span>
+                                        <span><i class="fas fa-tag"></i> Income</span>
+                                        <span><i class="fas fa-clock"></i> 25/11/2024</span>
+                                    </div>
+                                    <span class="wf-badge success">Active</span>
+                                </div>
+
+                                <div class="wf-bottom-nav">
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🏠</span>Home</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">📋</span>History</div>
+                                    <div class="wf-nav-item center"><span class="wf-nav-icon">+</span>Add</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🐷</span>Savings</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">👤</span>Profile</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-label">🔄 Recurring</div>
+                    <div class="card-desc">Manage automatic recurring payments and income</div>
+                </div>
+
+                <!-- 6. Emergency Fund -->
+                <div class="wireframe-card">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <div class="status-bar">
+                                <span>9:41</span>
+                                <span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
+                            </div>
+                            <div class="screen-content">
+                                <div class="wf-header">
+                                    <div><div style="font-size:14px;font-weight:800;">🛡️ Emergency Fund</div></div>
+                                </div>
+
+                                <div style="background:linear-gradient(135deg,#dc2626,#f59e0b);border-radius:12px;padding:16px;color:white;margin-bottom:12px;">
+                                    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;">
+                                        <span>🛡️ Emergency Fund</span>
+                                        <span style="background:rgba(255,255,255,0.2);padding:2px 12px;border-radius:50px;font-size:11px;">Building</span>
+                                    </div>
+                                    <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600;margin:4px 0 8px;">
+                                        <span>£275</span>
+                                        <span style="opacity:0.7;">Target: £500</span>
+                                    </div>
+                                    <div class="wf-progress" style="background:rgba(255,255,255,0.25);">
+                                        <div class="wf-fill" style="width:55%;background:#ffd700;"></div>
+                                    </div>
+                                    <div style="display:flex;gap:8px;margin-top:10px;">
+                                        <span style="background:rgba(255,255,255,0.2);padding:4px 14px;border-radius:50px;font-size:11px;font-weight:600;">+ Add</span>
+                                        <span style="background:rgba(255,255,255,0.2);padding:4px 14px;border-radius:50px;font-size:11px;font-weight:600;">Withdraw</span>
+                                    </div>
+                                </div>
+
+                                <div style="font-size:11px;color:#94a3b8;padding:8px 0;border-bottom:1px solid #f1f5f9;">
+                                    <i class="fas fa-history"></i> Recent Contributions
+                                </div>
+                                <div style="padding:6px 0;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;font-size:11px;">
+                                    <span>15 Nov 2024</span>
+                                    <span style="color:#22c55e;">+£50.00</span>
+                                </div>
+                                <div style="padding:6px 0;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;font-size:11px;">
+                                    <span>01 Nov 2024</span>
+                                    <span style="color:#22c55e;">+£25.00</span>
+                                </div>
+                                <div style="padding:6px 0;display:flex;justify-content:space-between;font-size:11px;">
+                                    <span>15 Oct 2024</span>
+                                    <span style="color:#22c55e;">+£25.00</span>
+                                </div>
+
+                                <div class="wf-bottom-nav">
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🏠</span>Home</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">📋</span>History</div>
+                                    <div class="wf-nav-item center"><span class="wf-nav-icon">+</span>Add</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🐷</span>Savings</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">👤</span>Profile</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-label">🛡️ Emergency Fund</div>
+                    <div class="card-desc">Build and track your safety net for unexpected expenses</div>
+                </div>
+
+                <!-- 7. History -->
+                <div class="wireframe-card">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <div class="status-bar">
+                                <span>9:41</span>
+                                <span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
+                            </div>
+                            <div class="screen-content">
+                                <div class="wf-header">
+                                    <div><div style="font-size:14px;font-weight:800;">📋 Transactions</div></div>
+                                    <span style="font-size:11px;color:#667eea;font-weight:600;">Export</span>
+                                </div>
+
+                                <div style="display:flex;gap:6px;margin-bottom:8px;">
+                                    <span style="background:#e2e8f0;padding:3px 12px;border-radius:50px;font-size:9px;font-weight:600;">All</span>
+                                    <span style="background:#e2e8f0;padding:3px 12px;border-radius:50px;font-size:9px;font-weight:600;">Deposits</span>
+                                    <span style="background:#e2e8f0;padding:3px 12px;border-radius:50px;font-size:9px;font-weight:600;">Payments</span>
+                                </div>
+
+                                <div class="wf-item-list">
+                                    <div class="wf-item" style="padding:8px 0;">
+                                        <div><span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#dcfce7;color:#22c55e;text-align:center;line-height:28px;font-size:12px;">↓</span></div>
+                                        <div style="flex:1;padding:0 8px;">
+                                            <div style="font-weight:600;font-size:12px;">Student Loan</div>
+                                            <div style="font-size:9px;color:#94a3b8;">15 Nov · Education</div>
+                                        </div>
+                                        <div style="color:#22c55e;font-weight:700;font-size:13px;">+£200</div>
+                                    </div>
+                                    <div class="wf-item" style="padding:8px 0;border-top:1px solid #f1f5f9;">
+                                        <div><span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#fee2e2;color:#dc2626;text-align:center;line-height:28px;font-size:12px;">↑</span></div>
+                                        <div style="flex:1;padding:0 8px;">
+                                            <div style="font-weight:600;font-size:12px;">ATM Withdrawal</div>
+                                            <div style="font-size:9px;color:#94a3b8;">14 Nov · Other</div>
+                                        </div>
+                                        <div style="color:#dc2626;font-weight:700;font-size:13px;">-£45.50</div>
+                                    </div>
+                                    <div class="wf-item" style="padding:8px 0;border-top:1px solid #f1f5f9;">
+                                        <div><span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#ede9fe;color:#764ba2;text-align:center;line-height:28px;font-size:12px;">💳</span></div>
+                                        <div style="flex:1;padding:0 8px;">
+                                            <div style="font-weight:600;font-size:12px;">Library Fine</div>
+                                            <div style="font-size:9px;color:#94a3b8;">13 Nov · Education</div>
+                                        </div>
+                                        <div style="color:#dc2626;font-weight:700;font-size:13px;">-£120</div>
+                                    </div>
+                                    <div class="wf-item" style="padding:8px 0;border-top:1px solid #f1f5f9;">
+                                        <div><span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#dcfce7;color:#22c55e;text-align:center;line-height:28px;font-size:12px;">↓</span></div>
+                                        <div style="flex:1;padding:0 8px;">
+                                            <div style="font-weight:600;font-size:12px;">Birthday Gift</div>
+                                            <div style="font-size:9px;color:#94a3b8;">12 Nov · Gift</div>
+                                        </div>
+                                        <div style="color:#22c55e;font-weight:700;font-size:13px;">+£50</div>
+                                    </div>
+                                </div>
+
+                                <div class="wf-bottom-nav">
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🏠</span>Home</div>
+                                    <div class="wf-nav-item active"><span class="wf-nav-icon">📋</span>History</div>
+                                    <div class="wf-nav-item center"><span class="wf-nav-icon">+</span>Add</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🐷</span>Savings</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">👤</span>Profile</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-label">📋 Transaction History</div>
+                    <div class="card-desc">Complete list of all transactions with filters</div>
+                </div>
+
+                <!-- 8. Notifications -->
+                <div class="wireframe-card">
+                    <div class="phone-frame">
+                        <div class="screen">
+                            <div class="status-bar">
+                                <span>9:41</span>
+                                <span><i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-three-quarters"></i></span>
+                            </div>
+                            <div class="screen-content">
+                                <div class="wf-header">
+                                    <div><div style="font-size:14px;font-weight:800;">🔔 Notifications</div></div>
+                                    <span style="font-size:11px;color:#667eea;font-weight:600;">Mark all read</span>
+                                </div>
+
+                                <div style="display:flex;gap:8px;align-items:center;padding:8px 10px;background:#dcfce7;border-radius:8px;margin-bottom:6px;border-left:3px solid #22c55e;">
+                                    <div style="width:28px;height:28px;border-radius:50%;background:#dcfce7;color:#22c55e;display:flex;align-items:center;justify-content:center;font-size:14px;">✓</div>
+                                    <div style="flex:1;">
+                                        <div style="font-weight:600;font-size:12px;">Deposit Received</div>
+                                        <div style="font-size:10px;color:#64748b;">£50.00 added to your account</div>
+                                        <div style="font-size:9px;color:#94a3b8;">2 hours ago</div>
+                                    </div>
+                                </div>
+
+                                <div style="display:flex;gap:8px;align-items:center;padding:8px 10px;background:#fef3c7;border-radius:8px;margin-bottom:6px;border-left:3px solid #f59e0b;">
+                                    <div style="width:28px;height:28px;border-radius:50%;background:#fef3c7;color:#f59e0b;display:flex;align-items:center;justify-content:center;font-size:14px;">⚠</div>
+                                    <div style="flex:1;">
+                                        <div style="font-weight:600;font-size:12px;">Low Balance Alert</div>
+                                        <div style="font-size:10px;color:#64748b;">Your balance is below £100</div>
+                                        <div style="font-size:9px;color:#94a3b8;">1 day ago</div>
+                                    </div>
+                                </div>
+
+                                <div style="display:flex;gap:8px;align-items:center;padding:8px 10px;background:#dbeafe;border-radius:8px;margin-bottom:6px;border-left:3px solid #3b82f6;">
+                                    <div style="width:28px;height:28px;border-radius:50%;background:#dbeafe;color:#3b82f6;display:flex;align-items:center;justify-content:center;font-size:14px;">ℹ</div>
+                                    <div style="flex:1;">
+                                        <div style="font-weight:600;font-size:12px;">Savings Goal Update</div>
+                                        <div style="font-size:10px;color:#64748b;">75% towards Laptop goal!</div>
+                                        <div style="font-size:9px;color:#94a3b8;">3 days ago</div>
+                                    </div>
+                                </div>
+
+                                <div style="display:flex;gap:8px;align-items:center;padding:8px 10px;background:#f8fafc;border-radius:8px;border-left:3px solid #e2e8f0;">
+                                    <div style="width:28px;height:28px;border-radius:50%;background:#f8fafc;color:#94a3b8;display:flex;align-items:center;justify-content:center;font-size:14px;">📅</div>
+                                    <div style="flex:1;">
+                                        <div style="font-weight:600;font-size:12px;">Recurring Payment</div>
+                                        <div style="font-size:10px;color:#64748b;">Netflix payment due in 2 days</div>
+                                        <div style="font-size:9px;color:#94a3b8;">5 days ago</div>
+                                    </div>
+                                </div>
+
+                                <div class="wf-bottom-nav">
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🏠</span>Home</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">📋</span>History</div>
+                                    <div class="wf-nav-item center"><span class="wf-nav-icon">+</span>Add</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">🐷</span>Savings</div>
+                                    <div class="wf-nav-item"><span class="wf-nav-icon">👤</span>Profile</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-label">🔔 Notifications</div>
+                    <div class="card-desc">Real-time alerts categorized by type (success, warning, info)</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==========================================
+        SECTION 3: USER FLOW
+        ========================================== -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-route"></i> User Flow Map
+                <span class="count">5 Key Journeys</span>
+            </div>
+
+            <div class="user-flow">
+
+                <div class="flow-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>💰 Deposit Funds</h4>
+                        <p>User adds money to their wallet via various payment methods</p>
+                        <div class="step-actions">
+                            <span class="tag">Dashboard → Deposit</span>
+                            <span class="tag">Enter Amount</span>
+                            <span class="tag">Select Method</span>
+                            <span class="tag">Confirm</span>
+                            <span class="tag">Balance Updated</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>🐷 Create Savings Goal</h4>
+                        <p>User sets a financial target with deadline and tracks progress</p>
+                        <div class="step-actions">
+                            <span class="tag">Dashboard → Savings</span>
+                            <span class="tag">+ New Goal</span>
+                            <span class="tag">Name + Target</span>
+                            <span class="tag">Set Deadline</span>
+                            <span class="tag">Track Progress</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>📊 Set Budget Category</h4>
+                        <p>User creates monthly spending limits for different categories</p>
+                        <div class="step-actions">
+                            <span class="tag">Dashboard → Budget</span>
+                            <span class="tag">+ Add Category</span>
+                            <span class="tag">Select Category</span>
+                            <span class="tag">Set Limit</span>
+                            <span class="tag">Monitor Spending</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>🔄 Setup Recurring Transaction</h4>
+                        <p>User automates regular payments or income streams</p>
+                        <div class="step-actions">
+                            <span class="tag">Dashboard → Recurring</span>
+                            <span class="tag">+ Add Recurring</span>
+                            <span class="tag">Name + Amount</span>
+                            <span class="tag">Frequency</span>
+                            <span class="tag">Start Date</span>
+                            <span class="tag">Auto-Process</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-num">5</div>
+                    <div class="step-content">
+                        <h4>🛡️ Emergency Fund Management</h4>
+                        <p>User builds and accesses their financial safety net</p>
+                        <div class="step-actions">
+                            <span class="tag">Dashboard → Emergency</span>
+                            <span class="tag">Add Funds</span>
+                            <span class="tag">Track Progress</span>
+                            <span class="tag">Withdraw (Emergency)</span>
+                            <span class="tag">View History</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==========================================
+        SECTION 4: COMPONENT BREAKDOWN
+        ========================================== -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-puzzle-piece"></i> UI Component Library
+                <span class="count">16 Components</span>
+            </div>
+
+            <div class="component-grid">
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-credit-card"></i></span>
+                    <div class="comp-name">Balance Card</div>
+                    <div class="comp-desc">Primary balance display with gradient background</div>
+                    <span class="comp-tag">Dashboard</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-chart-bar"></i></span>
+                    <div class="comp-name">Quick Stats</div>
+                    <div class="comp-desc">4 stat cards showing key metrics</div>
+                    <span class="comp-tag">Dashboard</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-th"></i></span>
+                    <div class="comp-name">Action Grid</div>
+                    <div class="comp-desc">5 primary action buttons with icons</div>
+                    <span class="comp-tag">Dashboard</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-bell"></i></span>
+                    <div class="comp-name">Notification Bell</div>
+                    <div class="comp-desc">Unread count badge with slide-out sheet</div>
+                    <span class="comp-tag">Global</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-piggy-bank"></i></span>
+                    <div class="comp-name">Goal Card</div>
+                    <div class="comp-desc">Savings goal with progress bar and actions</div>
+                    <span class="comp-tag">Savings</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-chart-pie"></i></span>
+                    <div class="comp-name">Budget Item</div>
+                    <div class="comp-desc">Category spending with color-coded progress</div>
+                    <span class="comp-tag">Budget</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-sync"></i></span>
+                    <div class="comp-name">Recurring Card</div>
+                    <div class="comp-desc">Auto-payment with status and next date</div>
+                    <span class="comp-tag">Recurring</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-shield-alt"></i></span>
+                    <div class="comp-name">Emergency Card</div>
+                    <div class="comp-desc">Special card with gradient and progress</div>
+                    <span class="comp-tag">Emergency</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-list"></i></span>
+                    <div class="comp-name">Transaction Item</div>
+                    <div class="comp-desc">List item with icon, amount, and status</div>
+                    <span class="comp-tag">History</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-arrow-up"></i></span>
+                    <div class="comp-name">Bottom Sheet</div>
+                    <div class="comp-desc">Slide-up modal for forms and actions</div>
+                    <span class="comp-tag">Global</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-bars"></i></span>
+                    <div class="comp-name">Bottom Nav</div>
+                    <div class="comp-desc">5-tab navigation with center FAB</div>
+                    <span class="comp-tag">Global</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-toast"></i></span>
+                    <div class="comp-name">Toast Message</div>
+                    <div class="comp-desc">Temporary feedback notification</div>
+                    <span class="comp-tag">Global</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-user-circle"></i></span>
+                    <div class="comp-name">Avatar</div>
+                    <div class="comp-desc">User profile picture placeholder</div>
+                    <span class="comp-tag">Header</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-progress"></i></span>
+                    <div class="comp-name">Progress Bar</div>
+                    <div class="comp-desc">Reusable progress indicator with colors</div>
+                    <span class="comp-tag">Global</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-tag"></i></span>
+                    <div class="comp-name">Status Badge</div>
+                    <div class="comp-desc">Small status indicators (active, paused, completed)</div>
+                    <span class="comp-tag">Global</span>
+                </div>
+
+                <div class="component-item">
+                    <span class="comp-icon"><i class="fas fa-search"></i></span>
+                    <div class="comp-name">Filter Chips</div>
+                    <div class="comp-desc">Quick filter options for transaction lists</div>
+                    <span class="comp-tag">History</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==========================================
+        SECTION 5: COLOR PALETTE
+        ========================================== -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-palette"></i> Design System — Color Palette
+                <span class="count">8 Colors</span>
+            </div>
+
+            <div class="color-palette">
+                <div class="color-item primary">
+                    <div class="color-hex">#1A237E</div>
+                    <div class="color-name">Primary Navy</div>
+                </div>
+                <div class="color-item secondary">
+                    <div class="color-hex">#667EEA</div>
+                    <div class="color-name">Secondary Blue</div>
+                </div>
+                <div class="color-item accent">
+                    <div class="color-hex">#764BA2</div>
+                    <div class="color-name">Accent Purple</div>
+                </div>
+                <div class="color-item success">
+                    <div class="color-hex">#22C55E</div>
+                    <div class="color-name">Success Green</div>
+                </div>
+                <div class="color-item danger">
+                    <div class="color-hex">#EF4444</div>
+                    <div class="color-name">Danger Red</div>
+                </div>
+                <div class="color-item warning">
+                    <div class="color-hex">#F59E0B</div>
+                    <div class="color-name">Warning Amber</div>
+                </div>
+                <div class="color-item gray-800">
+                    <div class="color-hex">#1E293B</div>
+                    <div class="color-name">Text Primary</div>
+                </div>
+                <div class="color-item gray-500">
+                    <div class="color-hex">#64748B</div>
+                    <div class="color-name">Text Secondary</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        SECTION 6: TYPOGRAPHY
+        ========================================== -->
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-font"></i> Typography Scale
+                <span class="count">6 Sizes</span>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;">
+                <div style="background:#f8fafc;border-radius:8px;padding:16px;">
+                    <div style="font-size:32px;font-weight:800;">H1</div>
+                    <div style="font-size:11px;color:#94a3b8;">32px · Bold · Headlines</div>
+                </div>
+                <div style="background:#f8fafc;border-radius:8px;padding:16px;">
+                    <div style="font-size:24px;font-weight:700;">H2</div>
+                    <div style="font-size:11px;color:#94a3b8;">24px · Bold · Section Titles</div>
+                </div>
+                <div style="background:#f8fafc;border-radius:8px;padding:16px;">
+                    <div style="font-size:20px;font-weight:700;">H3</div>
+                    <div style="font-size:11px;color:#94a3b8;">20px · Bold · Card Headers</div>
+                </div>
+                <div style="background:#f8fafc;border-radius:8px;padding:16px;">
+                    <div style="font-size:16px;font-weight:600;">Body 1</div>
+                    <div style="font-size:11px;color:#94a3b8;">16px · Semibold · Main Content</div>
+                </div>
+                <div style="background:#f8fafc;border-radius:8px;padding:16px;">
+                    <div style="font-size:14px;font-weight:500;">Body 2</div>
+                    <div style="font-size:11px;color:#94a3b8;">14px · Medium · Secondary Text</div>
+                </div>
+                <div style="background:#f8fafc;border-radius:8px;padding:16px;">
+                    <div style="font-size:12px;font-weight:400;">Caption</div>
+                    <div style="font-size:11px;color:#94a3b8;">12px · Regular · Labels & Meta</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+        FOOTER
+        ========================================== -->
+        <div style="text-align:center;padding:24px 0 8px;color:#94a3b8;font-size:13px;border-top:1px solid #e2e8f0;margin-top:16px;">
+            Student Wallet GUI Diagrams · University of Wolverhampton · v2.0
+            <br>
+            <span style="font-size:11px;">Designed for mobile-first experience · All screens interactive</span>
+        </div>
+
+    </div>
+
+    <script>
+        // Simple interaction for flow arrows
+        document.querySelectorAll('.flow-node').forEach(node => {
+            node.addEventListener('click', function() {
+                this.style.borderColor = '#667eea';
+                this.style.background = '#eef2ff';
+                setTimeout(() => {
+                    this.style.borderColor = '';
+                    this.style.background = '';
+                }, 500);
+            });
+        });
+
+        // Log for print
+        console.log('📱 Student Wallet GUI Diagrams loaded successfully!');
+        console.log('📊 Contains: Screen Flow, Wireframes, User Flows, Components, Colors, Typography');
+    </script>
+
+</body>
+</html>
